@@ -45,20 +45,6 @@ namespace Library
         public Cell[,] Cells { get; private set; } = new Cell[0, 0];
 
         /// <summary>
-        /// Gets a random cell.
-        /// </summary>
-        public Cell RandomCell
-        {
-            get
-            {
-                int row = Rand.Instance.Next(this.Rows);
-                int column = Rand.Instance.Next(this.Columns);
-
-                return this.Cells[row, column];
-            }
-        }
-
-        /// <summary>
         /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
         /// </summary>
         /// <param name="row">The desired cell row.</param>
@@ -96,6 +82,18 @@ namespace Library
 
                 action(row);
             }
+        }
+
+        /// <summary>
+        /// Gets a random cell.
+        /// </summary>
+        /// <returns>A random cell.</returns>
+        public Cell GetRandomCell()
+        {
+            int row = Rand.Instance.Next(this.Rows);
+            int column = Rand.Instance.Next(this.Columns);
+
+            return this.Cells[row, column];
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
 namespace Program
 {
     using Library;
+    using Library.Algorithms;
 
     /// <summary>
     /// The program.
@@ -17,8 +18,8 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            Grid grid = new(10, 10);
-            grid.ForEachRow(row => Console.WriteLine(string.Join<Cell>(",", row)));
+            Grid grid = new(4, 4);
+            BinaryTree.Execute(grid);
 
             Console.WriteLine("Done");
         }

@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using Library.Extensions;
+
     /// <summary>
     /// Represents a maze cell.
     /// </summary>
@@ -67,25 +69,10 @@ namespace Library
             {
                 List<Cell> neighbors = new();
 
-                if (this.North != null)
-                {
-                    neighbors.Add(this.North);
-                }
-
-                if (this.South != null)
-                {
-                    neighbors.Add(this.South);
-                }
-
-                if (this.East != null)
-                {
-                    neighbors.Add(this.East);
-                }
-
-                if (this.West != null)
-                {
-                    neighbors.Add(this.West);
-                }
+                neighbors.AddIfNotNull(this.North);
+                neighbors.AddIfNotNull(this.South);
+                neighbors.AddIfNotNull(this.East);
+                neighbors.AddIfNotNull(this.West);
 
                 return neighbors.ToArray();
             }
