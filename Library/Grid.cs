@@ -19,6 +19,16 @@ namespace Library
         /// <param name="columns">The number of columns in the grid.</param>
         public Grid(int rows, int columns)
         {
+            if (rows <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            }
+
+            if (columns <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(columns));
+            }
+
             this.Rows = rows;
             this.Columns = columns;
 
