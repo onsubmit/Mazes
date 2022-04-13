@@ -6,6 +6,10 @@
 namespace Library
 {
     using System.Text;
+    using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Drawing.Processing;
+    using SixLabors.ImageSharp.PixelFormats;
+    using SixLabors.ImageSharp.Processing;
 
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
@@ -126,6 +130,72 @@ namespace Library
                     action(row[c]);
                 }
             });
+        }
+
+        /// <summary>
+        /// Saves an image of the grid.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="cellSize">The size of each cell.</param>
+        public void SaveImage(string filename, int cellSize = 10)
+        {
+            Image image = this.GetImage(cellSize);
+            image.Save(filename);
+        }
+
+        /// <summary>
+        /// Gets an image representation of the grid.
+        /// </summary>
+        /// <param name="cellSize">The size of each cell.</param>
+        /// <returns>The image.</returns>
+        public Image GetImage(int cellSize = 10)
+        {
+            int width = cellSize * this.Columns;
+            int height = cellSize * this.Rows;
+
+            Image<Rgba32> image = new(width + 2, height + 2);
+            image.Mutate(imageContext =>
+            {
+                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
+                imageContext.BackgroundColor(backgroundColor);
+
+                Rgba32 wallColor = Rgba32.ParseHex("#000000");
+                Pen linePen = new(wallColor, 1);
+
+                Rectangle border = new(0, 0, width + 1, height + 1);
+                imageContext.Draw(linePen, border);
+
+                this.ForEachCell(cell =>
+                {
+                    int x1 = cell.Column * cellSize;
+                    int y1 = cell.Row * cellSize;
+
+                    int x2 = x1 + cellSize;
+                    int y2 = y1 + cellSize;
+
+                    if (cell.North == null)
+                    {
+                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
+                    }
+
+                    if (cell.West == null)
+                    {
+                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
+                    }
+
+                    if (!cell.IsLinkedTo(cell.East))
+                    {
+                        imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
+                    }
+
+                    if (!cell.IsLinkedTo(cell.South))
+                    {
+                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
+                    }
+                });
+            });
+
+            return image;
         }
 
         /// <summary>

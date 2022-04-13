@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SideWinder.cs" company="Andy Young">
+// <copyright file="Sidewinder.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,12 +8,12 @@ namespace Library.Algorithms
     using Library.Extensions;
 
     /// <summary>
-    /// Implements the SideWinder algorithm.
+    /// Implements the Sidewinder algorithm.
     /// </summary>
-    public static class SideWinder
+    public static class Sidewinder
     {
         /// <summary>
-        /// Executes the SideWinder algorithm.
+        /// Executes the Sidewinder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
         public static void Execute(Grid grid)

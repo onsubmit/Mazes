@@ -18,10 +18,13 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            Grid grid = new(20, 20);
-            SideWinder.Execute(grid);
+            Grid binaryTreeGrid = new(20, 20);
+            BinaryTree.Execute(binaryTreeGrid);
+            binaryTreeGrid.SaveImage("BinaryTree.png", 20);
 
-            Console.WriteLine(grid);
+            Grid sideWinderGrid = new(20, 20);
+            Sidewinder.Execute(sideWinderGrid);
+            sideWinderGrid.SaveImage("Sidewinder.png", 20);
         }
     }
 }
