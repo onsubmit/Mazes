@@ -3,8 +3,24 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using Library;
+namespace Program
+{
+    using Library;
 
-Grid grid = new(10, 10);
+    /// <summary>
+    /// The program.
+    /// </summary>
+    public class Program
+    {
+        /// <summary>
+        /// Main entry point.
+        /// </summary>
+        public static void Main()
+        {
+            Grid grid = new(10, 10);
+            grid.ForEachRow(row => Console.WriteLine(string.Join<Cell>(",", row)));
 
-Console.WriteLine("Done");
+            Console.WriteLine("Done");
+        }
+    }
+}

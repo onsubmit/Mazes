@@ -22,8 +22,6 @@ namespace Library
 
             this.PrepareGrid();
             this.ConfigureCells();
-
-            this.Cells = new Cell[0, 0];
         }
 
         /// <summary>
@@ -37,9 +35,28 @@ namespace Library
         public int Columns { get; private set; }
 
         /// <summary>
+        /// Gets the number of cells in the grid.
+        /// </summary>
+        public int Size => this.Rows * this.Columns;
+
+        /// <summary>
         /// Gets the collection of <see cref="Cell"/> objects.
         /// </summary>
-        public Cell[,] Cells { get; private set; }
+        public Cell[,] Cells { get; private set; } = new Cell[0, 0];
+
+        /// <summary>
+        /// Gets a random cell.
+        /// </summary>
+        public Cell RandomCell
+        {
+            get
+            {
+                int row = Rand.Instance.Next(this.Rows);
+                int column = Rand.Instance.Next(this.Columns);
+
+                return this.Cells[row, column];
+            }
+        }
 
         /// <summary>
         /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
@@ -63,6 +80,42 @@ namespace Library
 
                 return this.Cells[row, column];
             }
+        }
+
+        /// <summary>
+        /// Performs the given action for each row of cells in the grid.
+        /// </summary>
+        /// <param name="action">The action to perform.</param>
+        public void ForEachRow(Action<Cell[]> action)
+        {
+            for (int r = 0; r < this.Rows; r++)
+            {
+                Cell[] row = Enumerable.Range(0, this.Rows)
+                    .Select(c => this.Cells[r, c])
+                    .ToArray();
+
+                action(row);
+            }
+        }
+
+        /// <summary>
+        /// Performs the given action for each cell in the grid.
+        /// </summary>
+        /// <param name="action">The action to perform.</param>
+        public void ForEachCell(Action<Cell> action)
+        {
+            this.ForEachRow((row) =>
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    if (row[c] == null)
+                    {
+                        continue;
+                    }
+
+                    action(row[c]);
+                }
+            });
         }
 
         /// <summary>

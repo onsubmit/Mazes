@@ -124,5 +124,14 @@ namespace Library
         {
             return this.links.ContainsKey(cell);
         }
+
+        /// <summary>
+        /// Generates a string repsentation of the cell.
+        /// </summary>
+        /// <returns>A string repsentation of the cell.</returns>
+        public override string ToString()
+        {
+            return $"({this.Row}, {this.Column})";
+        }
     }
 }
