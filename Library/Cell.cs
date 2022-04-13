@@ -107,8 +107,13 @@ namespace Library
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns><c>true</c> if the provided cell is linked to the current cell, <c>false</c> otherwise.</returns>
-        public bool IsLinkedTo(Cell cell)
+        public bool IsLinkedTo(Cell? cell)
         {
+            if (cell == null)
+            {
+                return false;
+            }
+
             return this.links.ContainsKey(cell);
         }
 

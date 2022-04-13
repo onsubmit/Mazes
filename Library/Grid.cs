@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using System.Text;
+
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
@@ -76,7 +78,7 @@ namespace Library
         {
             for (int r = 0; r < this.Rows; r++)
             {
-                Cell[] row = Enumerable.Range(0, this.Rows)
+                Cell[] row = Enumerable.Range(0, this.Columns)
                     .Select(c => this.Cells[r, c])
                     .ToArray();
 
@@ -114,6 +116,50 @@ namespace Library
                     action(row[c]);
                 }
             });
+        }
+
+        /// <summary>
+        /// Generates a string repsentation of the grid.
+        /// </summary>
+        /// <returns>A string repsentation of the grid.</returns>
+        public override string ToString()
+        {
+            const string HorizontalOpening = "   ";
+            const string HorizontalWall = "---";
+            const char VerticalWall = '|';
+            const char VerticalOpening = ' ';
+            const char Corner = '+';
+
+            StringBuilder sb = new();
+            sb.Append(Corner);
+            sb.AppendLine(string.Concat(Enumerable.Repeat(HorizontalWall + Corner, this.Columns)));
+
+            this.ForEachRow(row =>
+            {
+                StringBuilder topBuilder = new();
+                topBuilder.Append(VerticalWall);
+
+                StringBuilder bottomBuilder = new();
+                bottomBuilder.Append(Corner);
+
+                foreach (Cell c in row)
+                {
+                    Cell cell = c ?? new Cell(-1, -1);
+                    char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
+                    string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
+
+                    topBuilder.Append(HorizontalOpening);
+                    topBuilder.Append(eastBoundary);
+
+                    bottomBuilder.Append(southBoundary);
+                    bottomBuilder.Append(Corner);
+                }
+
+                sb.AppendLine(topBuilder.ToString());
+                sb.AppendLine(bottomBuilder.ToString());
+            });
+
+            return sb.ToString();
         }
 
         /// <summary>

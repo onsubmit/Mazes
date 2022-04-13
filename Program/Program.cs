@@ -18,10 +18,10 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            Grid grid = new(4, 4);
+            Grid grid = new(20, 20);
             BinaryTree.Execute(grid);
 
-            Console.WriteLine("Done");
+            Console.WriteLine(grid);
         }
     }
 }
