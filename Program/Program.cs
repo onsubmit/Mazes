@@ -19,7 +19,7 @@ namespace Program
         public static void Main()
         {
             Grid grid = new(20, 20);
-            BinaryTree.Execute(grid);
+            SideWinder.Execute(grid);
 
             Console.WriteLine(grid);
         }

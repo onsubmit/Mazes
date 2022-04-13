@@ -8,12 +8,12 @@ namespace Library.Algorithms
     using Library.Extensions;
 
     /// <summary>
-    /// Implements the Binary Tree Algorithm.
+    /// Implements the Binary Tree algorithm.
     /// </summary>
     public static class BinaryTree
     {
         /// <summary>
-        /// Executes the Binary Tree Algorithm.
+        /// Executes the Binary Tree algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
         public static void Execute(Grid grid)
