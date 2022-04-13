@@ -153,7 +153,7 @@ namespace Library
             int width = cellSize * this.Columns;
             int height = cellSize * this.Rows;
 
-            Image<Rgba32> image = new(width + 2, height + 2);
+            Image<Rgba32> image = new(width + 1, height + 1);
             image.Mutate(imageContext =>
             {
                 Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
