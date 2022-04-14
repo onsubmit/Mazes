@@ -20,15 +20,15 @@ namespace Program
         public static void Main()
         {
             Console.WriteLine("Binary Tree");
-            DistanceGrid binaryTreeGrid = new(10, 10);
+            DistanceGrid binaryTreeGrid = new(5, 5);
             BinaryTree.Execute(binaryTreeGrid);
-            Dijkstra.Solve(binaryTreeGrid);
+            LongestPath.Solve(binaryTreeGrid);
             binaryTreeGrid.SaveImage("BinaryTree.png", 40);
 
             Console.WriteLine("Sidewinder");
-            DistanceGrid sideWinderGrid = new(10, 10);
+            DistanceGrid sideWinderGrid = new(5, 5);
             Sidewinder.Execute(sideWinderGrid);
-            Dijkstra.Solve(sideWinderGrid);
+            LongestPath.Solve(sideWinderGrid);
             sideWinderGrid.SaveImage("Sidewinder.png", 40);
         }
     }

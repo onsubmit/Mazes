@@ -79,5 +79,30 @@ namespace Library
 
             return breadcrumbs;
         }
+
+        /// <summary>
+        /// Gets the cell furthest from the root.
+        /// </summary>
+        /// <param name="distance">The distance the cell is from the root.</param>
+        /// <returns>The cell furthest from the root.</returns>
+        public Cell GetCellFurthestFromRoot(out int distance)
+        {
+            distance = 0;
+
+            int maxDistance = 0;
+            Cell maxCell = this.root;
+
+            foreach ((Cell cell, int distanceToCell) in this.cells)
+            {
+                if (distanceToCell > maxDistance)
+                {
+                    maxCell = cell;
+                    maxDistance = distanceToCell;
+                }
+            }
+
+            distance = maxDistance;
+            return maxCell;
+        }
     }
 }
