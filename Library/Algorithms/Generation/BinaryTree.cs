@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Library.Algorithms
+namespace Library.Algorithms.Generation
 {
     using Library.Extensions;
 

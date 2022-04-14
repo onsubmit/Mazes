@@ -6,7 +6,7 @@
 namespace Program
 {
     using Library;
-    using Library.Algorithms;
+    using Library.Algorithms.Generation;
 
     /// <summary>
     /// The program.
