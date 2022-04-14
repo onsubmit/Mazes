@@ -118,6 +118,39 @@ namespace Library
         }
 
         /// <summary>
+        /// Gets the distances between this cell and all the other cells.
+        /// </summary>
+        /// <returns>The distances between this cell and all the other cells.</returns>
+        public Distances GetDistances()
+        {
+            Distances distances = new(this);
+            List<Cell> frontier = new() { this };
+
+            while (frontier.Any())
+            {
+                List<Cell> newFrontier = new();
+
+                foreach (Cell cell in frontier)
+                {
+                    foreach (Cell linked in cell.Links)
+                    {
+                        if (distances.HasCell(linked))
+                        {
+                            continue;
+                        }
+
+                        distances[linked] = distances[cell] + 1;
+                        newFrontier.Add(linked);
+                    }
+                }
+
+                frontier = newFrontier;
+            }
+
+            return distances;
+        }
+
+        /// <summary>
         /// Generates a string repsentation of the cell.
         /// </summary>
         /// <returns>A string repsentation of the cell.</returns>

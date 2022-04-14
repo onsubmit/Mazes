@@ -42,5 +42,12 @@ namespace Library
                 this.cells[cell] = value;
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the distance from the cell and the root is known yet.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns><c>true</c> if the distance between the cell and the root is known, <c>false</c> otherwise.</returns>
+        public bool HasCell(Cell cell) => this.cells.ContainsKey(cell);
     }
 }
