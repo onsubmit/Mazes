@@ -85,11 +85,18 @@ namespace Library
         }
 
         /// <summary>
-        /// Gets the contents of the cell.
+        /// Gets the cell's contents.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        /// <returns>The contents of the cell.</returns>
+        /// <returns>The cell's contents.</returns>
         public virtual string GetCellContents(Cell cell) => " ";
+
+        /// <summary>
+        /// Gets the cell's background color.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's background color.</returns>
+        public virtual Rgba32 GetCellBackgroundColor(Cell cell) => Rgba32.ParseHex("#ffffff");
 
         /// <summary>
         /// Performs the given action for each row of cells in the grid.
@@ -172,34 +179,49 @@ namespace Library
                 Rectangle border = new(0, 0, width + 1, height + 1);
                 imageContext.Draw(linePen, border);
 
-                this.ForEachCell(cell =>
+                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
                 {
-                    int x1 = cell.Column * cellSize;
-                    int y1 = cell.Row * cellSize;
-
-                    int x2 = x1 + cellSize;
-                    int y2 = y1 + cellSize;
-
-                    if (cell.North == null)
+                    this.ForEachCell(cell =>
                     {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
-                    }
+                        int x1 = cell.Column * cellSize;
+                        int y1 = cell.Row * cellSize;
 
-                    if (cell.West == null)
-                    {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
-                    }
+                        int x2 = x1 + cellSize;
+                        int y2 = y1 + cellSize;
 
-                    if (!cell.IsLinkedTo(cell.East))
-                    {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
-                    }
+                        switch (mode)
+                        {
+                            case ImageGenerationMode.Backgrounds:
+                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+                                Rectangle cellSquare = new(x1, y1, cellSize, cellSize);
+                                imageContext.Fill(cellBackgroundColor, cellSquare);
+                                break;
 
-                    if (!cell.IsLinkedTo(cell.South))
-                    {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
-                    }
-                });
+                            case ImageGenerationMode.Walls:
+                                if (cell.North == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
+                                }
+
+                                if (cell.West == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.East))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.South))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
+                                }
+
+                                break;
+                        }
+                    });
+                }
             });
 
             return image;
