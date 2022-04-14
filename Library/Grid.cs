@@ -85,6 +85,13 @@ namespace Library
         }
 
         /// <summary>
+        /// Gets the contents of the cell.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The contents of the cell.</returns>
+        public virtual string GetCellContents(Cell cell) => " ";
+
+        /// <summary>
         /// Performs the given action for each row of cells in the grid.
         /// </summary>
         /// <param name="action">The action to perform.</param>
@@ -228,7 +235,7 @@ namespace Library
                     char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
                     string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
 
-                    topBuilder.Append(HorizontalOpening);
+                    topBuilder.Append($" {this.GetCellContents(cell)} ");
                     topBuilder.Append(eastBoundary);
 
                     bottomBuilder.Append(southBoundary);

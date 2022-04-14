@@ -20,10 +20,12 @@ namespace Program
         {
             Grid binaryTreeGrid = new(20, 20);
             BinaryTree.Execute(binaryTreeGrid);
+            Console.WriteLine(binaryTreeGrid);
             binaryTreeGrid.SaveImage("BinaryTree.png", 20);
 
             Grid sideWinderGrid = new(20, 20);
             Sidewinder.Execute(sideWinderGrid);
+            Console.WriteLine(sideWinderGrid);
             sideWinderGrid.SaveImage("Sidewinder.png", 20);
         }
     }
