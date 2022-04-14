@@ -30,7 +30,8 @@ namespace Library
         /// </summary>
         /// <param name="row">The cell row.</param>
         /// <param name="column">The cell column.</param>
-        public void SetDistancesFromCell(int row, int column)
+        /// <returns>The distances from the cell at the given coordinates.</returns>
+        public Distances GetDistancesFromCell(int row, int column)
         {
             Cell? cell = this[row, column];
             if (cell == null)
@@ -38,7 +39,7 @@ namespace Library
                 throw new InvalidOperationException($"No cell found at ({row}, {column}).");
             }
 
-            this.Distances = cell.GetDistances();
+            return cell.GetDistances();
         }
 
         /// <summary>

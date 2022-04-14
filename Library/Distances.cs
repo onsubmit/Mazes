@@ -10,6 +10,7 @@ namespace Library
     /// </summary>
     public class Distances
     {
+        private readonly Cell root;
         private readonly Dictionary<Cell, int> cells = new();
 
         /// <summary>
@@ -18,6 +19,7 @@ namespace Library
         /// <param name="root">The root cell used to record the distance of each cell from it.</param>
         public Distances(Cell root)
         {
+            this.root = root;
             this.cells[root] = 0;
         }
 
@@ -49,5 +51,33 @@ namespace Library
         /// <param name="cell">The cell.</param>
         /// <returns><c>true</c> if the distance between the cell and the root is known, <c>false</c> otherwise.</returns>
         public bool HasCell(Cell cell) => this.cells.ContainsKey(cell);
+
+        /// <summary>
+        /// Determines the shortest path from the original starting point to the provided goal cell.
+        /// </summary>
+        /// <param name="goal">The goal cell.</param>
+        /// <returns>The distances from the starting point to the goal cell.</returns>
+        public Distances GetShortestPathTo(Cell goal)
+        {
+            Cell current = goal;
+
+            Distances breadcrumbs = new(this.root);
+            breadcrumbs[current] = this.cells[current];
+
+            while (current != this.root)
+            {
+                foreach (Cell neighbor in current.Links)
+                {
+                    if (this.cells[neighbor] < this.cells[current])
+                    {
+                        breadcrumbs[neighbor] = this.cells[neighbor];
+                        current = neighbor;
+                        break;
+                    }
+                }
+            }
+
+            return breadcrumbs;
+        }
     }
 }

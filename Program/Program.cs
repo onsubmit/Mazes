@@ -7,6 +7,7 @@ namespace Program
 {
     using Library;
     using Library.Algorithms.Generation;
+    using Library.Algorithms.Solving;
 
     /// <summary>
     /// The program.
@@ -18,18 +19,16 @@ namespace Program
         /// </summary>
         public static void Main()
         {
+            Console.WriteLine("Binary Tree");
             DistanceGrid binaryTreeGrid = new(10, 10);
             BinaryTree.Execute(binaryTreeGrid);
-
-            binaryTreeGrid.SetDistancesFromCell(0, 0);
-            Console.WriteLine(binaryTreeGrid);
+            Dijkstra.Solve(binaryTreeGrid);
             binaryTreeGrid.SaveImage("BinaryTree.png", 40);
 
+            Console.WriteLine("Sidewinder");
             DistanceGrid sideWinderGrid = new(10, 10);
             Sidewinder.Execute(sideWinderGrid);
-
-            sideWinderGrid.SetDistancesFromCell(0, 0);
-            Console.WriteLine(sideWinderGrid);
+            Dijkstra.Solve(sideWinderGrid);
             sideWinderGrid.SaveImage("Sidewinder.png", 40);
         }
     }
