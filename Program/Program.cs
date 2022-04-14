@@ -18,15 +18,19 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            Grid binaryTreeGrid = new(20, 20);
+            DistanceGrid binaryTreeGrid = new(10, 10);
             BinaryTree.Execute(binaryTreeGrid);
-            Console.WriteLine(binaryTreeGrid);
-            binaryTreeGrid.SaveImage("BinaryTree.png", 20);
 
-            Grid sideWinderGrid = new(20, 20);
+            binaryTreeGrid.SetDistancesFromCell(0, 0);
+            Console.WriteLine(binaryTreeGrid);
+            binaryTreeGrid.SaveImage("BinaryTree.png", 40);
+
+            DistanceGrid sideWinderGrid = new(10, 10);
             Sidewinder.Execute(sideWinderGrid);
+
+            sideWinderGrid.SetDistancesFromCell(0, 0);
             Console.WriteLine(sideWinderGrid);
-            sideWinderGrid.SaveImage("Sidewinder.png", 20);
+            sideWinderGrid.SaveImage("Sidewinder.png", 40);
         }
     }
 }
