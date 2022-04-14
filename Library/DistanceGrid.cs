@@ -23,7 +23,7 @@ namespace Library
         /// <summary>
         /// Gets or sets the distances.
         /// </summary>
-        public Distances? Distances { get; set; }
+        public virtual Distances? Distances { get; set; }
 
         /// <summary>
         /// Sets the distances from the cell at the given coordinates.

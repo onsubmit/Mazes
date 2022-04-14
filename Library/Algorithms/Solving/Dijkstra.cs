@@ -14,12 +14,14 @@ namespace Library.Algorithms.Solving
         /// Solves the maze using Dijkstra's algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public static void Solve(DistanceGrid grid)
+        /// <param name="start">The starting cell.</param>
+        /// <param name="end">The ending cell.</param>
+        public static void Solve(DistanceGrid grid, Cell start, Cell end)
         {
-            grid.Distances = grid.GetDistancesFromCell(0, 0);
+            grid.Distances = start.GetDistances();
             Console.WriteLine(grid);
 
-            grid.Distances = grid.Distances.GetShortestPathTo(grid.Cells[grid.Rows - 1, 0]);
+            grid.Distances = grid.Distances.GetShortestPathTo(end);
             Console.WriteLine(grid);
         }
     }

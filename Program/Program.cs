@@ -20,16 +20,24 @@ namespace Program
         public static void Main()
         {
             Console.WriteLine("Binary Tree");
-            DistanceGrid binaryTreeGrid = new(5, 5);
+            ColoredGrid binaryTreeGrid = new(25, 25);
             BinaryTree.Execute(binaryTreeGrid);
-            LongestPath.Solve(binaryTreeGrid);
-            binaryTreeGrid.SaveImage("BinaryTree.png", 40);
+            Cell start = binaryTreeGrid.Cells[binaryTreeGrid.Rows - 1, 4];
+            Cell end = binaryTreeGrid.Cells[8, binaryTreeGrid.Columns - 1];
+            binaryTreeGrid.Distances = start.GetDistances();
+            binaryTreeGrid.SaveImage("ColoredBinaryTree.png", 20);
+            Dijkstra.Solve(binaryTreeGrid, start, end);
+            binaryTreeGrid.SaveImage("ColoredBinaryTreeDijkstra.png", 20);
 
             Console.WriteLine("Sidewinder");
-            DistanceGrid sideWinderGrid = new(5, 5);
+            ColoredGrid sideWinderGrid = new(25, 25);
             Sidewinder.Execute(sideWinderGrid);
-            LongestPath.Solve(sideWinderGrid);
-            sideWinderGrid.SaveImage("Sidewinder.png", 40);
+            start = sideWinderGrid.Cells[sideWinderGrid.Rows - 1, 4];
+            end = sideWinderGrid.Cells[8, sideWinderGrid.Columns - 1];
+            sideWinderGrid.Distances = start.GetDistances();
+            sideWinderGrid.SaveImage("ColoredSidewinder.png", 20);
+            Dijkstra.Solve(sideWinderGrid, start, end);
+            sideWinderGrid.SaveImage("ColoredSidewinderDijkstra.png", 20);
         }
     }
 }
