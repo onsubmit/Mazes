@@ -1,0 +1,42 @@
+﻿//-----------------------------------------------------------------------
+// <copyright file="AldousBroder.cs" company="Andy Young">
+//     Copyright (c) Andy Young. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Library.Algorithms.Generation
+{
+    using Library.Extensions;
+
+    /// <summary>
+    /// Implements the Binary Tree algorithm.
+    /// </summary>
+    public static class AldousBroder
+    {
+        /// <summary>
+        /// Executes the Binary Tree algorithm.
+        /// </summary>
+        /// <param name="grid">The maze grid.</param>
+        public static void Execute(Grid grid)
+        {
+            int unvisitedCells = grid.Size - 1;
+
+            Cell cell = grid.GetRandomCell();
+
+            while (unvisitedCells > 0)
+            {
+                if (!cell.Neighbors.TryGetRandomElement(out Cell neighbor))
+                {
+                    throw new InvalidOperationException("Could not get a random neighbor");
+                }
+
+                if (!neighbor.Links.Any())
+                {
+                    cell.Link(neighbor);
+                    unvisitedCells--;
+                }
+
+                cell = neighbor;
+            }
+        }
+    }
+}

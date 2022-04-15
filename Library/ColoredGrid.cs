@@ -54,7 +54,7 @@ namespace Library
             float dark = (float)Math.Round(255 * intensity) / 255;
             float bright = (128 + (float)Math.Round(127 * intensity)) / 255;
 
-            return new Rgba32(dark, dark, bright);
+            return new Rgba32(dark, bright, bright);
         }
     }
 }
