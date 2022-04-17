@@ -19,7 +19,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            AldousBroderDemo();
+            WilsonsDemo();
         }
 
         private static void AldousBroderDemo()
@@ -31,7 +31,17 @@ namespace Program
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"AldousBroder{i}.png", 20);
             }
+        }
 
+        private static void WilsonsDemo()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                ColoredGrid grid = new(20, 20);
+                Wilsons.Execute(grid);
+                grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
+                grid.SaveImage($"Wilson{i}.png", 20);
+            }
         }
     }
 }

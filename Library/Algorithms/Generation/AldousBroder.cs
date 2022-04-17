@@ -24,10 +24,7 @@ namespace Library.Algorithms.Generation
 
             while (unvisitedCells > 0)
             {
-                if (!cell.Neighbors.TryGetRandomElement(out Cell neighbor))
-                {
-                    throw new InvalidOperationException("Could not get a random neighbor");
-                }
+                Cell neighbor = cell.Neighbors.GetRandomElement();
 
                 if (!neighbor.Links.Any())
                 {

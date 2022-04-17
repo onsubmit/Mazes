@@ -19,6 +19,15 @@ namespace Library
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
         /// </summary>
+        /// <param name="size">The number of rows and columns in the grid.</param>
+        public Grid(int size)
+            : this(size, size)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Grid"/> class.
+        /// </summary>
         /// <param name="rows">The number of rows in the grid.</param>
         /// <param name="columns">The number of columns in the grid.</param>
         public Grid(int rows, int columns)

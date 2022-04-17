@@ -29,7 +29,8 @@ namespace Library.Algorithms.Generation
                     {
                         // Close out the current run if we're at the eastern boundary
                         // or randomly as long as we are not in the northernmost row.
-                        if (run.TryGetRandomElement(out Cell member) && member.North != null)
+                        Cell member = run.GetRandomElement();
+                        if (member.North != null)
                         {
                             member.Link(member.North);
                         }

@@ -35,5 +35,29 @@ namespace Library.Extensions
             element = list.ElementAt(index);
             return true;
         }
+
+        /// <summary>
+        /// Gets a random element from the list.
+        /// </summary>
+        /// <typeparam name="T">The list type.</typeparam>
+        /// <param name="list">The list.</param>
+        /// <returns>The random element.</returns>
+        /// <exception cref="ArgumentNullException">Throw when list is null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if list is empty.</exception>
+        public static T GetRandomElement<T>(this IEnumerable<T> list)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
+            if (!list.Any())
+            {
+                throw new InvalidOperationException("List is empty.");
+            }
+
+            int index = Rand.Instance.Next(0, list.Count());
+            return list.ElementAt(index);
+        }
     }
 }

@@ -32,3 +32,12 @@
 ![Aldous Broder 4](images/AldousBroder3.png?raw=true "Aldous Broder 4")
 ![Aldous Broder 5](images/AldousBroder4.png?raw=true "Aldous Broder 5")
 ![Aldous Broder 6](images/AldousBroder5.png?raw=true "Aldous Broder 6")
+
+## Wilson's examples
+
+![Wilson's 1](images/Wilson0.png?raw=true "Wilson's 1")
+![Wilson's 2](images/Wilson1.png?raw=true "Wilson's 2")
+![Wilson's 3](images/Wilson2.png?raw=true "Wilson's 3")
+![Wilson's 4](images/Wilson3.png?raw=true "Wilson's 4")
+![Wilson's 5](images/Wilson4.png?raw=true "Wilson's 5")
+![Wilson's 6](images/Wilson5.png?raw=true "Wilson's 6")
