@@ -7,7 +7,6 @@ namespace Program
 {
     using Library;
     using Library.Algorithms.Generation;
-    using Library.Algorithms.Solving;
 
     /// <summary>
     /// The program.
@@ -19,7 +18,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            WilsonsDemo();
+            HuntAndKillDemo();
         }
 
         private static void AldousBroderDemo()
@@ -41,6 +40,17 @@ namespace Program
                 Wilsons.Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"Wilson{i}.png", 20);
+            }
+        }
+
+        private static void HuntAndKillDemo()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                ColoredGrid grid = new(20, 20);
+                HuntAndKill.Execute(grid);
+                grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
+                grid.SaveImage($"HuntAndKill{i}.png", 20);
             }
         }
     }

@@ -8,12 +8,12 @@ namespace Library.Algorithms.Generation
     using Library.Extensions;
 
     /// <summary>
-    /// Implements the Binary Tree algorithm.
+    /// Implements the Aldous-Broder algorithm.
     /// </summary>
     public static class AldousBroder
     {
         /// <summary>
-        /// Executes the Binary Tree algorithm.
+        /// Executes the Aldous-Broder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
         public static void Execute(Grid grid)

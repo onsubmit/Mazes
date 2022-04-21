@@ -41,3 +41,14 @@
 ![Wilson's 4](images/Wilson3.png?raw=true "Wilson's 4")
 ![Wilson's 5](images/Wilson4.png?raw=true "Wilson's 5")
 ![Wilson's 6](images/Wilson5.png?raw=true "Wilson's 6")
+
+# Chapter 5
+
+## Hunt-and-Kill examples
+
+![Hunt-and-Kill 1](images/HuntAndKill0.png?raw=true "Hunt-and-Kill 1")
+![Hunt-and-Kill 2](images/HuntAndKill1.png?raw=true "Hunt-and-Kill 2")
+![Hunt-and-Kill 3](images/HuntAndKill2.png?raw=true "Hunt-and-Kill 3")
+![Hunt-and-Kill 4](images/HuntAndKill3.png?raw=true "Hunt-and-Kill 4")
+![Hunt-and-Kill 5](images/HuntAndKill4.png?raw=true "Hunt-and-Kill 5")
+![Hunt-and-Kill 6](images/HuntAndKill5.png?raw=true "Hunt-and-Kill 6")

@@ -113,13 +113,29 @@ namespace Library
         /// <param name="action">The action to perform.</param>
         public void ForEachRow(Action<Cell[]> action)
         {
+            this.ForEachRow((cell) =>
+            {
+                action(cell);
+                return GridIteratorResult.Continue;
+            });
+        }
+
+        /// <summary>
+        /// Performs the given function for each row of cells in the grid.
+        /// </summary>
+        /// <param name="func">The function to perform.</param>
+        public void ForEachRow(Func<Cell[], GridIteratorResult> func)
+        {
             for (int r = 0; r < this.Rows; r++)
             {
                 Cell[] row = Enumerable.Range(0, this.Columns)
                     .Select(c => this.Cells[r, c])
                     .ToArray();
 
-                action(row);
+                if (func(row) == GridIteratorResult.Stop)
+                {
+                    return;
+                }
             }
         }
 
@@ -141,6 +157,19 @@ namespace Library
         /// <param name="action">The action to perform.</param>
         public void ForEachCell(Action<Cell> action)
         {
+            this.ForEachCell(cell =>
+            {
+                action(cell);
+                return GridIteratorResult.Continue;
+            });
+        }
+
+        /// <summary>
+        /// Performs the given function for each cell in the grid.
+        /// </summary>
+        /// <param name="func">The function to perform.</param>
+        public void ForEachCell(Func<Cell, GridIteratorResult> func)
+        {
             this.ForEachRow((row) =>
             {
                 for (int c = 0; c < this.Columns; c++)
@@ -150,8 +179,13 @@ namespace Library
                         continue;
                     }
 
-                    action(row[c]);
+                    if (func(row[c]) == GridIteratorResult.Stop)
+                    {
+                        return GridIteratorResult.Stop;
+                    }
                 }
+
+                return GridIteratorResult.Continue;
             });
         }
 

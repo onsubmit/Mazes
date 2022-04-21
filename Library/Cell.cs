@@ -56,6 +56,11 @@ namespace Library
         public Cell? West { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether the cell has any linked cells.
+        /// </summary>
+        public bool HasLink => this.links.Any();
+
+        /// <summary>
         /// Gets the linked cells.
         /// </summary>
         public Cell[] Links => this.links.Keys.ToArray();
