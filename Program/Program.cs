@@ -18,7 +18,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            HuntAndKillDemo();
+            DeadEndCounts.GenerateReport();
         }
 
         private static void AldousBroderDemo()
