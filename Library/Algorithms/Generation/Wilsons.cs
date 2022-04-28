@@ -10,13 +10,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements Wilson's algorithm.
     /// </summary>
-    public static class Wilsons
+    public class Wilsons : IGenerationAlgorithm
     {
         /// <summary>
         /// Executes Wilson's algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public static void Execute(Grid grid)
+        public void Execute(Grid grid)
         {
             List<Cell> unvisited = new();
             grid.ForEachCell(cell => unvisited.Add(cell));

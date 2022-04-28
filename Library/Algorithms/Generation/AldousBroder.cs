@@ -10,13 +10,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Aldous-Broder algorithm.
     /// </summary>
-    public static class AldousBroder
+    public class AldousBroder : IGenerationAlgorithm
     {
         /// <summary>
         /// Executes the Aldous-Broder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public static void Execute(Grid grid)
+        public void Execute(Grid grid)
         {
             int unvisitedCells = grid.Size - 1;
 

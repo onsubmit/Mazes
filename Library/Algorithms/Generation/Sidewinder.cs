@@ -10,13 +10,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Sidewinder algorithm.
     /// </summary>
-    public static class Sidewinder
+    public class Sidewinder : IGenerationAlgorithm
     {
         /// <summary>
         /// Executes the Sidewinder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public static void Execute(Grid grid)
+        public void Execute(Grid grid)
         {
             grid.ForEachRow(row =>
             {

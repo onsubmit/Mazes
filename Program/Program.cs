@@ -26,7 +26,7 @@ namespace Program
             for (int i = 0; i < 6; i++)
             {
                 ColoredGrid grid = new(20, 20);
-                AldousBroder.Execute(grid);
+                new AldousBroder().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"AldousBroder{i}.png", 20);
             }
@@ -37,7 +37,7 @@ namespace Program
             for (int i = 0; i < 6; i++)
             {
                 ColoredGrid grid = new(20, 20);
-                Wilsons.Execute(grid);
+                new Wilsons().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"Wilson{i}.png", 20);
             }
@@ -48,7 +48,7 @@ namespace Program
             for (int i = 0; i < 6; i++)
             {
                 ColoredGrid grid = new(20, 20);
-                HuntAndKill.Execute(grid);
+                new HuntAndKill().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"HuntAndKill{i}.png", 20);
             }
