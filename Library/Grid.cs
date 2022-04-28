@@ -271,6 +271,24 @@ namespace Library
         }
 
         /// <summary>
+        /// Gets all of the dead-end cells in the grid.
+        /// </summary>
+        /// <returns>The dead-end cells in the grid.</returns>
+        public List<Cell> GetDeadEnds()
+        {
+            List<Cell> cells = new();
+            this.ForEachCell((cell) =>
+            {
+                if (cell.Links.Length == 1)
+                {
+                    cells.Add(cell);
+                }
+            });
+
+            return cells;
+        }
+
+        /// <summary>
         /// Generates a string repsentation of the grid.
         /// </summary>
         /// <returns>A string repsentation of the grid.</returns>
