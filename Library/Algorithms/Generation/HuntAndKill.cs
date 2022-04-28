@@ -10,13 +10,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Hunt-and-Kill algorithm.
     /// </summary>
-    public class HuntAndKill : IGenerationAlgorithm
+    public class HuntAndKill : GenerationAlgorithm
     {
         /// <summary>
         /// Executes the Hunt-and-Kill algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public void Execute(Grid grid)
+        public override void Execute(Grid grid)
         {
             // Begin and some random cell.
             Cell? current = grid.GetRandomCell();

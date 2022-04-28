@@ -10,13 +10,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Binary Tree algorithm.
     /// </summary>
-    public class BinaryTree : IGenerationAlgorithm
+    public class BinaryTree : GenerationAlgorithm
     {
         /// <summary>
         /// Executes the Binary Tree algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public void Execute(Grid grid)
+        public override void Execute(Grid grid)
         {
             grid.ForEachCell(cell =>
             {
