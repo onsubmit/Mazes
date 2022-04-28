@@ -13,6 +13,15 @@ namespace Library
         /// <summary>
         /// Initializes a new instance of the <see cref="DistanceGrid"/> class.
         /// </summary>
+        /// <param name="size">The number of rows and columns in the grid.</param>
+        public DistanceGrid(int size)
+            : this(size, size)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DistanceGrid"/> class.
+        /// </summary>
         /// <param name="rows">The number of rows in the grid.</param>
         /// <param name="columns">The number of columns in the grid.</param>
         public DistanceGrid(int rows, int columns)

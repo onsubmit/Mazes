@@ -18,7 +18,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            DeadEndCounts.GenerateReport();
+            RecursiveBacktrackerDemo.Execute();
         }
 
         private static void AldousBroderDemo()

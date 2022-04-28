@@ -17,6 +17,15 @@ namespace Library
         /// <summary>
         /// Initializes a new instance of the <see cref="ColoredGrid"/> class.
         /// </summary>
+        /// <param name="size">The number of rows and columns in the grid.</param>
+        public ColoredGrid(int size)
+            : this(size, size)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColoredGrid"/> class.
+        /// </summary>
         /// <param name="rows">The number of rows in the grid.</param>
         /// <param name="columns">The number of columns in the grid.</param>
         public ColoredGrid(int rows, int columns)
@@ -54,7 +63,7 @@ namespace Library
             float dark = (float)Math.Round(255 * intensity) / 255;
             float bright = (128 + (float)Math.Round(127 * intensity)) / 255;
 
-            return new Rgba32(dark, bright, bright / 2);
+            return new Rgba32(bright / 4, bright / 2, bright);
         }
     }
 }
