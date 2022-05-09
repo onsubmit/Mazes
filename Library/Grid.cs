@@ -14,7 +14,7 @@ namespace Library
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class Grid
+    public class Grid : TwoDimensionalArray<Cell>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
@@ -31,43 +31,16 @@ namespace Library
         /// <param name="rows">The number of rows in the grid.</param>
         /// <param name="columns">The number of columns in the grid.</param>
         public Grid(int rows, int columns)
+            : base(rows, columns)
         {
-            if (rows <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(rows));
-            }
-
-            if (columns <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(columns));
-            }
-
-            this.Rows = rows;
-            this.Columns = columns;
-
             this.PrepareGrid();
             this.ConfigureCells();
         }
 
         /// <summary>
-        /// Gets the number of rows in the grid.
-        /// </summary>
-        public int Rows { get; private set; }
-
-        /// <summary>
-        /// Gets the number of columns in the grid.
-        /// </summary>
-        public int Columns { get; private set; }
-
-        /// <summary>
-        /// Gets the number of cells in the grid.
-        /// </summary>
-        public int Size => this.Rows * this.Columns;
-
-        /// <summary>
         /// Gets the collection of <see cref="Cell"/> objects.
         /// </summary>
-        public Cell[,] Cells { get; private set; } = new Cell[0, 0];
+        public Cell[,] Cells => this.Values;
 
         /// <summary>
         /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
@@ -108,88 +81,6 @@ namespace Library
         public virtual Rgba32 GetCellBackgroundColor(Cell cell) => Rgba32.ParseHex("#ffffff");
 
         /// <summary>
-        /// Performs the given action for each row of cells in the grid.
-        /// </summary>
-        /// <param name="action">The action to perform.</param>
-        public void ForEachRow(Action<Cell[]> action)
-        {
-            this.ForEachRow((cell) =>
-            {
-                action(cell);
-                return GridIteratorResult.Continue;
-            });
-        }
-
-        /// <summary>
-        /// Performs the given function for each row of cells in the grid.
-        /// </summary>
-        /// <param name="func">The function to perform.</param>
-        public void ForEachRow(Func<Cell[], GridIteratorResult> func)
-        {
-            for (int r = 0; r < this.Rows; r++)
-            {
-                Cell[] row = Enumerable.Range(0, this.Columns)
-                    .Select(c => this.Cells[r, c])
-                    .ToArray();
-
-                if (func(row) == GridIteratorResult.Stop)
-                {
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a random cell.
-        /// </summary>
-        /// <returns>A random cell.</returns>
-        public Cell GetRandomCell()
-        {
-            int row = Rand.Instance.Next(this.Rows);
-            int column = Rand.Instance.Next(this.Columns);
-
-            return this.Cells[row, column];
-        }
-
-        /// <summary>
-        /// Performs the given action for each cell in the grid.
-        /// </summary>
-        /// <param name="action">The action to perform.</param>
-        public void ForEachCell(Action<Cell> action)
-        {
-            this.ForEachCell(cell =>
-            {
-                action(cell);
-                return GridIteratorResult.Continue;
-            });
-        }
-
-        /// <summary>
-        /// Performs the given function for each cell in the grid.
-        /// </summary>
-        /// <param name="func">The function to perform.</param>
-        public void ForEachCell(Func<Cell, GridIteratorResult> func)
-        {
-            this.ForEachRow((row) =>
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    if (row[c] == null)
-                    {
-                        continue;
-                    }
-
-                    if (func(row[c]) == GridIteratorResult.Stop)
-                    {
-                        return GridIteratorResult.Stop;
-                    }
-                }
-
-                return GridIteratorResult.Continue;
-            });
-        }
-
-        /// <summary>
         /// Saves an image of the grid.
         /// </summary>
         /// <param name="filename">The filename.</param>
@@ -224,7 +115,7 @@ namespace Library
 
                 foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
                 {
-                    this.ForEachCell(cell =>
+                    this.ForEachElement(cell =>
                     {
                         int x1 = cell.Column * cellSize;
                         int y1 = cell.Row * cellSize;
@@ -277,7 +168,7 @@ namespace Library
         public List<Cell> GetDeadEnds()
         {
             List<Cell> cells = new();
-            this.ForEachCell((cell) =>
+            this.ForEachElement((cell) =>
             {
                 if (cell.Links.Length == 1)
                 {
@@ -337,7 +228,7 @@ namespace Library
         /// </summary>
         private void PrepareGrid()
         {
-            this.Cells = new Cell[this.Rows, this.Columns];
+            this.Values = new Cell[this.Rows, this.Columns];
             for (int r = 0; r < this.Rows; r++)
             {
                 for (int c = 0; c < this.Columns; c++)

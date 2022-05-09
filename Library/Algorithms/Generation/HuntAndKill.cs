@@ -19,7 +19,7 @@ namespace Library.Algorithms.Generation
         public override void Execute(Grid grid)
         {
             // Begin and some random cell.
-            Cell? current = grid.GetRandomCell();
+            Cell? current = grid.GetRandomElement();
 
             // Perform random walk.
             while (current != null)
@@ -38,11 +38,11 @@ namespace Library.Algorithms.Generation
                     current = null;
 
                     // Find the first unvisited cell that is bordered by at least one visited cell.
-                    grid.ForEachCell(cell =>
+                    grid.ForEachElement(cell =>
                     {
                         if (cell.HasLink)
                         {
-                            return GridIteratorResult.Continue;
+                            return TwoDimensionalArrayIteratorResult.Continue;
                         }
 
                         IEnumerable<Cell> visitedNeighbors = cell.Neighbors.Where(n => n.HasLink);
@@ -53,10 +53,10 @@ namespace Library.Algorithms.Generation
                             Cell visitedNeighbor = visitedNeighbors.GetRandomElement();
                             current.Link(visitedNeighbor);
 
-                            return GridIteratorResult.Stop;
+                            return TwoDimensionalArrayIteratorResult.Stop;
                         }
 
-                        return GridIteratorResult.Continue;
+                        return TwoDimensionalArrayIteratorResult.Continue;
                     });
                 }
             }

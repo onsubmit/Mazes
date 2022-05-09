@@ -18,7 +18,7 @@ namespace Library.Algorithms.Generation
         /// <param name="grid">The maze grid.</param>
         public override void Execute(Grid grid)
         {
-            grid.ForEachCell(cell =>
+            grid.ForEachElement(cell =>
             {
                 List<Cell> neighbors = new();
                 neighbors.AddIfNotNull(cell.North);

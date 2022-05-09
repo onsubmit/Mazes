@@ -19,7 +19,7 @@ namespace Library.Algorithms.Generation
         public override void Execute(Grid grid)
         {
             List<Cell> unvisited = new();
-            grid.ForEachCell(cell => unvisited.Add(cell));
+            grid.ForEachElement(cell => unvisited.Add(cell));
 
             Cell first = unvisited.GetRandomElement();
             unvisited.Remove(first);

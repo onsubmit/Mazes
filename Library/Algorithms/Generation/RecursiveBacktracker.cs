@@ -18,7 +18,7 @@ namespace Library.Algorithms.Generation
         /// <param name="grid">The maze grid.</param>
         public override void Execute(Grid grid)
         {
-            this.Execute(grid.GetRandomCell());
+            this.Execute(grid.GetRandomElement());
         }
 
         /// <summary>

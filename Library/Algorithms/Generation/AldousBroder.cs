@@ -20,7 +20,7 @@ namespace Library.Algorithms.Generation
         {
             int unvisitedCells = grid.Size - 1;
 
-            Cell cell = grid.GetRandomCell();
+            Cell cell = grid.GetRandomElement();
 
             while (unvisitedCells > 0)
             {

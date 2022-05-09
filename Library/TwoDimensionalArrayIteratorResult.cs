@@ -1,14 +1,14 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="GridIteratorResult.cs" company="Andy Young">
+// <copyright file="TwoDimensionalArrayIteratorResult.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 namespace Library
 {
     /// <summary>
-    /// Result returned by a grid iterator function.
+    /// Result returned by a two dimensional array iterator function.
     /// </summary>
-    public enum GridIteratorResult
+    public enum TwoDimensionalArrayIteratorResult
     {
         /// <summary>
         /// Continue executing.
