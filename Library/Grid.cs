@@ -33,7 +33,7 @@ namespace Library
         public Grid(int rows, int columns)
             : base(rows, columns)
         {
-            this.PrepareGrid();
+            this.InitializeElements((r, c) => new Cell(r, c));
             this.ConfigureCells();
         }
 
@@ -221,21 +221,6 @@ namespace Library
             });
 
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Prepares the initial state of the grid.
-        /// </summary>
-        private void PrepareGrid()
-        {
-            this.Values = new Cell[this.Rows, this.Columns];
-            for (int r = 0; r < this.Rows; r++)
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    this.Cells[r, c] = new Cell(r, c);
-                }
-            }
         }
 
         /// <summary>

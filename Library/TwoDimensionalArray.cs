@@ -62,6 +62,38 @@ namespace Library
         public T[,] Values { get; protected set; } = new T[0, 0];
 
         /// <summary>
+        /// Initializes the array.
+        /// </summary>
+        /// <param name="initialValue">Initial value of each element.</param>
+        public void InitializeElements(T initialValue)
+        {
+            this.Values = new T[this.Rows, this.Columns];
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    this.Values[r, c] = initialValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the array.
+        /// </summary>
+        /// <param name="func">Function that determines the initial value of each element.</param>
+        public void InitializeElements(Func<int, int, T> func)
+        {
+            this.Values = new T[this.Rows, this.Columns];
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    this.Values[r, c] = func(r, c);
+                }
+            }
+        }
+
+        /// <summary>
         /// Performs the given action for each row of elements in the array.
         /// </summary>
         /// <param name="action">The action to perform.</param>
