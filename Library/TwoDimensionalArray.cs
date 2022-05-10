@@ -42,6 +42,11 @@ namespace Library
         }
 
         /// <summary>
+        /// Gets or sets the collection of values.
+        /// </summary>
+        public T[,] Values { get; protected set; } = new T[0, 0];
+
+        /// <summary>
         /// Gets the number of rows in the array.
         /// </summary>
         public int Rows { get; private set; }
@@ -54,12 +59,7 @@ namespace Library
         /// <summary>
         /// Gets the number of elements in the array.
         /// </summary>
-        public int Size => this.Rows * this.Columns;
-
-        /// <summary>
-        /// Gets or sets the collection of values.
-        /// </summary>
-        public T[,] Values { get; protected set; } = new T[0, 0];
+        public virtual int Size => this.Rows * this.Columns;
 
         /// <summary>
         /// Initializes the array.
@@ -73,22 +73,6 @@ namespace Library
                 for (int c = 0; c < this.Columns; c++)
                 {
                     this.Values[r, c] = initialValue;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes the array.
-        /// </summary>
-        /// <param name="func">Function that determines the initial value of each element.</param>
-        public void InitializeElements(Func<int, int, T> func)
-        {
-            this.Values = new T[this.Rows, this.Columns];
-            for (int r = 0; r < this.Rows; r++)
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    this.Values[r, c] = func(r, c);
                 }
             }
         }
@@ -160,11 +144,6 @@ namespace Library
             {
                 for (int c = 0; c < this.Columns; c++)
                 {
-                    if (row[c] == null)
-                    {
-                        continue;
-                    }
-
                     if (func(row[c]) == TwoDimensionalArrayIteratorResult.Stop)
                     {
                         return TwoDimensionalArrayIteratorResult.Stop;

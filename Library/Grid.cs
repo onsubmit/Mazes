@@ -14,7 +14,7 @@ namespace Library
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class Grid : TwoDimensionalArray<Cell>
+    public class Grid : TwoDimensionalClassArray<Cell>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
@@ -33,7 +33,12 @@ namespace Library
         public Grid(int rows, int columns)
             : base(rows, columns)
         {
-            this.InitializeElements((r, c) => new Cell(r, c));
+            this.InitializeElements((int row, int column, out Cell? initialValue) =>
+            {
+                initialValue = new(row, column);
+                return true;
+            });
+
             this.ConfigureCells();
         }
 
@@ -41,6 +46,11 @@ namespace Library
         /// Gets the collection of <see cref="Cell"/> objects.
         /// </summary>
         public Cell[,] Cells => this.Values;
+
+        /// <summary>
+        /// Gets the number of cells in the grid.
+        /// </summary>
+        public override int Size => base.Size;
 
         /// <summary>
         /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
