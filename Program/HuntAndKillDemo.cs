@@ -14,13 +14,13 @@ namespace Program
     public static class HuntAndKillDemo
     {
         /// <summary>
-        /// Generates the report.
+        /// Executes the demo.
         /// </summary>
         public static void Execute()
         {
             for (int i = 0; i < 6; i++)
             {
-                ColoredGrid grid = new(20, 20);
+                ColoredGrid grid = new(20);
                 new HuntAndKill().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"HuntAndKill{i}.png", 20);

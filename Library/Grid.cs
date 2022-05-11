@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.Drawing.Processing;
@@ -33,13 +34,11 @@ namespace Library
         public Grid(int rows, int columns)
             : base(rows, columns)
         {
-            this.InitializeElements((int row, int column, out Cell? initialValue) =>
+            if (!this.GetType().IsSubclassOf(typeof(Grid)))
             {
-                initialValue = new(row, column);
-                return true;
-            });
-
-            this.ConfigureCells();
+                // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
+                this.Initialize();
+            }
         }
 
         /// <summary>
@@ -234,15 +233,42 @@ namespace Library
         }
 
         /// <summary>
+        /// Tries to get the initial value for each element.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="initialValue">The initial value.</param>
+        /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
+        protected virtual bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
+        {
+            initialValue = new(row, column);
+            return true;
+        }
+
+        /// <summary>
+        /// Initializes the grid.
+        /// </summary>
+        protected void Initialize()
+        {
+            this.InitializeElements(this.TryGetInitialElementValue);
+            this.ConfigureCells();
+        }
+
+        /// <summary>
         /// Configures the cell neighbors.
         /// </summary>
-        private void ConfigureCells()
+        protected void ConfigureCells()
         {
             for (int r = 0; r < this.Rows; r++)
             {
                 for (int c = 0; c < this.Columns; c++)
                 {
                     Cell cell = this.Cells[r, c];
+
+                    if (cell == null)
+                    {
+                        continue;
+                    }
 
                     cell.North = this[r - 1, c];
                     cell.South = this[r + 1, c];

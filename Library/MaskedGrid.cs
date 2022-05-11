@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
@@ -20,18 +22,7 @@ namespace Library
             : base(mask.Rows, mask.Columns)
         {
             this.mask = mask;
-
-            this.InitializeElements((int r, int c, out Cell? initialValue) =>
-            {
-                if (!mask[r, c])
-                {
-                    initialValue = null;
-                    return false;
-                }
-
-                initialValue = new Cell(r, c);
-                return true;
-            });
+            this.Initialize();
         }
 
         /// <summary>
@@ -43,10 +34,29 @@ namespace Library
         /// Gets a random cell from the masked grid.
         /// </summary>
         /// <returns>A random cell from the masked grid.</returns>
-        public Cell GetRandomCell()
+        public override Cell GetRandomElement()
         {
             (int r, int c) = this.mask.GetCoordinatesOfRandomEnabledCell();
             return this.Values[r, c];
+        }
+
+        /// <summary>
+        /// Tries to get the initial value for each element.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="initialValue">The initial value.</param>
+        /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
+        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
+        {
+            if (!this.mask[row, column])
+            {
+                initialValue = null;
+                return false;
+            }
+
+            initialValue = new Cell(row, column);
+            return true;
         }
     }
 }

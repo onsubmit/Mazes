@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="WilsonsDemo.cs" company="Andy Young">
+// <copyright file="AsciiMaskDemo.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,22 +9,20 @@ namespace Program
     using Library.Algorithms.Generation;
 
     /// <summary>
-    /// Class used to demonstrate the Wilsons algorithm.
+    /// Demonstrates the <see cref="Mask"/> class using an ASCII file.
     /// </summary>
-    public static class WilsonsDemo
+    public static class AsciiMaskDemo
     {
         /// <summary>
         /// Executes the demo.
         /// </summary>
         public static void Execute()
         {
-            for (int i = 0; i < 6; i++)
-            {
-                ColoredGrid grid = new(20);
-                new Wilsons().Execute(grid);
-                grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
-                grid.SaveImage($"Wilson{i}.png", 20);
-            }
+            Mask mask = Mask.FromFile("mask.txt");
+            MaskedGrid grid = new(mask);
+
+            new RecursiveBacktracker().Execute(grid);
+            grid.SaveImage($"AsciiGrid.png", 20);
         }
     }
 }

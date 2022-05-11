@@ -23,4 +23,10 @@
     <ProjectReference Include="..\Library\Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="mask.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

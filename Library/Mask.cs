@@ -84,6 +84,30 @@ namespace Library
         }
 
         /// <summary>
+        /// Gets the mask defined by the ASCII mask in <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to the ASCII mask file.</param>
+        /// <returns>The new mask.</returns>
+        public static Mask FromFile(string path)
+        {
+            string[] lines = File.ReadAllLines(path).Select(l => l.Trim()).ToArray();
+            int rows = lines.Length;
+            int columns = lines.First().Length;
+
+            Mask mask = new(rows, columns);
+
+            bool GetInitialValues(int r, int c, out bool initialValue)
+            {
+                initialValue = lines[r][c] != 'X';
+                return true;
+            }
+
+            mask.InitializeElements(GetInitialValues);
+
+            return mask;
+        }
+
+        /// <summary>
         /// Gets the coordinates of a random, enabled cell.
         /// </summary>
         /// <returns>The coordinates of a random, enabled cell.</returns>

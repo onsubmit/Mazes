@@ -76,42 +76,6 @@ namespace Library
         public T[,] Values { get; protected set; } = new T[0, 0];
 
         /// <summary>
-        /// Initializes the array.
-        /// </summary>
-        /// <param name="initialValue">Initial value of each element.</param>
-        public void InitializeElements(T initialValue)
-        {
-            this.Values = new T[this.Rows, this.Columns];
-            for (int r = 0; r < this.Rows; r++)
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    this.Values[r, c] = initialValue;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes the array.
-        /// </summary>
-        /// <param name="tryGetInitialElementValue">Function that attempts to get the initial value of each element.</param>
-        public void InitializeElements(TryGetInitialElementValueDelegate tryGetInitialElementValue)
-        {
-            this.Values = new T[this.Rows, this.Columns];
-
-            for (int r = 0; r < this.Rows; r++)
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    if (tryGetInitialElementValue(r, c, out T? initialValue))
-                    {
-                        this.Values[r, c] = initialValue;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Performs the given action for each row of elements in the array.
         /// </summary>
         /// <param name="action">The action to perform.</param>
@@ -147,7 +111,7 @@ namespace Library
         /// Gets a random element.
         /// </summary>
         /// <returns>A random element.</returns>
-        public T GetRandomElement()
+        public virtual T GetRandomElement()
         {
             int row = Rand.Instance.Next(this.Rows);
             int column = Rand.Instance.Next(this.Columns);
@@ -191,6 +155,42 @@ namespace Library
 
                 return TwoDimensionalArrayIteratorResult.Continue;
             });
+        }
+
+        /// <summary>
+        /// Initializes the array.
+        /// </summary>
+        /// <param name="initialValue">Initial value of each element.</param>
+        protected void InitializeElements(T initialValue)
+        {
+            this.Values = new T[this.Rows, this.Columns];
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    this.Values[r, c] = initialValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the array.
+        /// </summary>
+        /// <param name="tryGetInitialElementValue">Function that attempts to get the initial value of each element.</param>
+        protected void InitializeElements(TryGetInitialElementValueDelegate tryGetInitialElementValue)
+        {
+            this.Values = new T[this.Rows, this.Columns];
+
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    if (tryGetInitialElementValue(r, c, out T? initialValue))
+                    {
+                        this.Values[r, c] = initialValue;
+                    }
+                }
+            }
         }
     }
 }

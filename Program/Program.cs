@@ -15,7 +15,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            RecursiveBacktrackerDemo.Execute();
+            AsciiMaskDemo.Execute();
         }
     }
 }
