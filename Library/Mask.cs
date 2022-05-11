@@ -8,7 +8,7 @@ namespace Library
     /// <summary>
     /// Represents a grid mask.
     /// </summary>
-    public class Mask : TwoDimensionalStructArray<bool>
+    public class Mask : TwoDimensionalArray<bool>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Mask"/> class.

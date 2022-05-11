@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a two dimensional array.
     /// </summary>
@@ -42,9 +44,16 @@ namespace Library
         }
 
         /// <summary>
-        /// Gets or sets the collection of values.
+        /// Delegate that tries to get the initial value for the element located at the given row and column.
         /// </summary>
-        public T[,] Values { get; protected set; } = new T[0, 0];
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="initialValue">The initial value.</param>
+        /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
+        public delegate bool TryGetInitialElementValueDelegate(
+            int row,
+            int column,
+            [NotNullWhen(returnValue: true)] out T? initialValue);
 
         /// <summary>
         /// Gets the number of rows in the array.
@@ -62,6 +71,11 @@ namespace Library
         public virtual int Size => this.Rows * this.Columns;
 
         /// <summary>
+        /// Gets or sets the collection of values.
+        /// </summary>
+        public T[,] Values { get; protected set; } = new T[0, 0];
+
+        /// <summary>
         /// Initializes the array.
         /// </summary>
         /// <param name="initialValue">Initial value of each element.</param>
@@ -73,6 +87,26 @@ namespace Library
                 for (int c = 0; c < this.Columns; c++)
                 {
                     this.Values[r, c] = initialValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the array.
+        /// </summary>
+        /// <param name="tryGetInitialElementValue">Function that attempts to get the initial value of each element.</param>
+        public void InitializeElements(TryGetInitialElementValueDelegate tryGetInitialElementValue)
+        {
+            this.Values = new T[this.Rows, this.Columns];
+
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    if (tryGetInitialElementValue(r, c, out T? initialValue))
+                    {
+                        this.Values[r, c] = initialValue;
+                    }
                 }
             }
         }
@@ -144,6 +178,11 @@ namespace Library
             {
                 for (int c = 0; c < this.Columns; c++)
                 {
+                    if (row[c] == null)
+                    {
+                        continue;
+                    }
+
                     if (func(row[c]) == TwoDimensionalArrayIteratorResult.Stop)
                     {
                         return TwoDimensionalArrayIteratorResult.Stop;

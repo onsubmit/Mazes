@@ -14,7 +14,7 @@ namespace Library
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class Grid : TwoDimensionalClassArray<Cell>
+    public class Grid : TwoDimensionalArray<Cell>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
