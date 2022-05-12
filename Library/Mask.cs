@@ -13,6 +13,14 @@ namespace Library
         /// <summary>
         /// Initializes a new instance of the <see cref="Mask"/> class.
         /// </summary>
+        public Mask()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Mask"/> class.
+        /// </summary>
         /// <param name="size">The number of rows and columns in the grid.</param>
         public Mask(int size)
             : this(size, size)
@@ -27,7 +35,11 @@ namespace Library
         public Mask(int rows, int columns)
             : base(rows, columns)
         {
-            this.InitializeElements(true);
+            if (!this.GetType().IsSubclassOf(typeof(Mask)))
+            {
+                // Derived classes are responsible for calling the InitializeElements method themselves from their own constructors.
+                this.InitializeElements(true);
+            }
         }
 
         /// <summary>
@@ -81,30 +93,6 @@ namespace Library
             {
                 this.CellStates[row, column] = value;
             }
-        }
-
-        /// <summary>
-        /// Gets the mask defined by the ASCII mask in <paramref name="path"/>.
-        /// </summary>
-        /// <param name="path">The path to the ASCII mask file.</param>
-        /// <returns>The new mask.</returns>
-        public static Mask FromFile(string path)
-        {
-            string[] lines = File.ReadAllLines(path).Select(l => l.Trim()).ToArray();
-            int rows = lines.Length;
-            int columns = lines.First().Length;
-
-            Mask mask = new(rows, columns);
-
-            bool GetInitialValues(int r, int c, out bool initialValue)
-            {
-                initialValue = lines[r][c] != 'X';
-                return true;
-            }
-
-            mask.InitializeElements(GetInitialValues);
-
-            return mask;
         }
 
         /// <summary>

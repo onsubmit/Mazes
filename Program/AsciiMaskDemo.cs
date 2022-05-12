@@ -18,7 +18,7 @@ namespace Program
         /// </summary>
         public static void Execute()
         {
-            Mask mask = Mask.FromFile("mask.txt");
+            AsciiMask mask = AsciiMask.FromFile("mask.txt");
             MaskedGrid grid = new(mask);
 
             new RecursiveBacktracker().Execute(grid);

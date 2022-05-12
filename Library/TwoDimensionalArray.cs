@@ -16,6 +16,14 @@ namespace Library
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoDimensionalArray{T}"/> class.
         /// </summary>
+        public TwoDimensionalArray()
+            : this(0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwoDimensionalArray{T}"/> class.
+        /// </summary>
         /// <param name="size">The number of rows and columns in the array.</param>
         public TwoDimensionalArray(int size)
             : this(size, size)
