@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Program
+namespace Program.Demos
 {
     using Library;
     using Library.Algorithms.Generation;

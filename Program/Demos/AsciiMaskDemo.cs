@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Program
+namespace Program.Demos
 {
     using Library;
     using Library.Algorithms.Generation;
@@ -22,7 +22,11 @@ namespace Program
             MaskedGrid grid = new(mask);
 
             new RecursiveBacktracker().Execute(grid);
-            grid.SaveImage($"AsciiGrid.png", 20);
+
+            Cell startingCell = grid.GetRandomElement();
+            grid.Distances = startingCell.GetDistances();
+
+            grid.SaveImage($"AsciiGrid.png", 40);
         }
     }
 }

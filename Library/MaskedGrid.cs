@@ -10,7 +10,7 @@ namespace Library
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class MaskedGrid : Grid
+    public class MaskedGrid : ColoredGrid
     {
         private readonly Mask mask;
 

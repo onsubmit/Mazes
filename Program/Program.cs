@@ -15,7 +15,6 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            AsciiMaskDemo.Execute();
         }
     }
 }
