@@ -8,7 +8,7 @@ namespace Library.Grids
     using SixLabors.ImageSharp.PixelFormats;
 
     /// <summary>
-    ///  Version of <see cref="Grid"/> which can render the distance numbers for each cell.
+    /// Version of <see cref="DistanceGrid"/> but distances are portrayed via color.
     /// </summary>
     public class ColoredGrid : DistanceGrid
     {

@@ -105,7 +105,7 @@ namespace Library.Grids
         /// </summary>
         /// <param name="cellSize">The size of each cell.</param>
         /// <returns>The image.</returns>
-        public Image GetImage(int cellSize = 10)
+        public virtual Image GetImage(int cellSize = 10)
         {
             int width = cellSize * this.Columns;
             int height = cellSize * this.Rows;

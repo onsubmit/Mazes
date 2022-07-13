@@ -15,6 +15,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
+            Demos.PolarGridDemo.Execute();
         }
     }
 }
