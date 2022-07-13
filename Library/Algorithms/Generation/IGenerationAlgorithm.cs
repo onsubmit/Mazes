@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Grids;
+
     /// <summary>
     /// Interface for the maze generation algorithms.
     /// </summary>

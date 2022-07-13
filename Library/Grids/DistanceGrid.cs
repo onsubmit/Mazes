@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Library
+namespace Library.Grids
 {
     /// <summary>
     ///  Version of <see cref="Grid"/> which can render the distance numbers for each cell.

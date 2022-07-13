@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Library
+namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;

@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Program
 {
-    using Library;
     using Library.Algorithms.Generation;
+    using Library.Grids;
 
     /// <summary>
     /// Class used to generate a report of the average number of dead ends for each algorithm.

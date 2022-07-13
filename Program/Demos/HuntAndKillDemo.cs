@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Program.Demos
 {
-    using Library;
     using Library.Algorithms.Generation;
+    using Library.Grids;
 
     /// <summary>
     /// Class used to demonstrate the Hunt and Kill algorithm.

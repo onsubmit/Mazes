@@ -6,6 +6,7 @@
 namespace Library.Algorithms.Generation
 {
     using Library.Extensions;
+    using Library.Grids;
 
     /// <summary>
     /// Implements the Hunt-and-Kill algorithm.

@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Grids;
+
     /// <summary>
     /// Base abstract implementation of <see cref="IGenerationAlgorithm"/>.
     /// </summary>

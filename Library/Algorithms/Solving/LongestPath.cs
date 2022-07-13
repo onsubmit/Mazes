@@ -3,8 +3,11 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 namespace Library.Algorithms.Solving
 {
+    using Library.Grids;
+
     /// <summary>
     /// Implements the longest path maze solving algorithm.
     /// </summary>

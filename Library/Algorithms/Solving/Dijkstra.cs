@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Solving
 {
+    using Library.Grids;
+
     /// <summary>
     /// Implements Dijkstra's maze solving algorithm.
     /// </summary>
