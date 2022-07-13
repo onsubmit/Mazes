@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Library
+namespace Library.Masks
 {
     /// <summary>
     /// Represents a grid mask defined by an ASCII mask file.

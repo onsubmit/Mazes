@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Library
+namespace Library.Masks
 {
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.PixelFormats;

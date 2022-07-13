@@ -6,6 +6,7 @@
 namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
+    using Library.Masks;
 
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.

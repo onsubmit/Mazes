@@ -8,6 +8,7 @@ namespace Program.Demos
     using Library;
     using Library.Algorithms.Generation;
     using Library.Grids;
+    using Library.Masks;
 
     /// <summary>
     /// Demonstrates the <see cref="Mask"/> class using an ASCII file.
