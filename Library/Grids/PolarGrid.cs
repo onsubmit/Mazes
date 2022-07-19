@@ -14,7 +14,7 @@ namespace Library.Grids
     /// <summary>
     /// Represents a polar grid, allowing the creation of circular mazes.
     /// </summary>
-    public class PolarGrid : Grid
+    public class PolarGrid : CartesianGrid
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PolarGrid"/> class.
@@ -50,7 +50,7 @@ namespace Library.Grids
                 EllipsePolygon circle = new(origin, radius);
                 imageContext.DrawPolygon(linePen, circle.Points.ToArray());
 
-                this.ForEachElement(cell =>
+                this.ForEachCell(cell =>
                 {
                     double theta = 2 * Math.PI / this.Columns;
                     int innerRadius = cell.Row * cellSize;

@@ -1,0 +1,279 @@
+﻿//-----------------------------------------------------------------------
+// <copyright file="CartesianGrid.cs" company="Andy Young">
+//     Copyright (c) Andy Young. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Library.Grids
+{
+    using System.Diagnostics.CodeAnalysis;
+    using System.Text;
+    using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Drawing.Processing;
+    using SixLabors.ImageSharp.PixelFormats;
+    using SixLabors.ImageSharp.Processing;
+
+    /// <summary>
+    /// Represents a Cartesian maze grid, effectively a collection of <see cref="Cell"/> objects arranged in x-y coordinates.
+    /// </summary>
+    public class CartesianGrid : Grid<Cell>
+    {
+        /// <summary>
+        /// Gets the collection of <see cref="Cell"/> objects.
+        /// </summary>
+        private readonly TwoDimensionalArray<Cell> cells;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianGrid"/> class.
+        /// </summary>
+        /// <param name="size">The number of rows and columns in the grid.</param>
+        public CartesianGrid(int size)
+            : this(size, size)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianGrid"/> class.
+        /// </summary>
+        /// <param name="rows">The number of rows in the grid.</param>
+        /// <param name="columns">The number of columns in the grid.</param>
+        public CartesianGrid(int rows, int columns)
+        {
+            this.cells = new(rows, columns);
+            this.Initialize();
+        }
+
+        /// <summary>
+        /// Gets the number of rows in the grid.
+        /// </summary>
+        public int Rows => this.cells.Rows;
+
+        /// <summary>
+        /// Gets the number of columns in the grid.
+        /// </summary>
+        public int Columns => this.cells.Columns;
+
+        /// <inheritdoc />
+        public override int Size => this.cells.Size;
+
+        /// <summary>
+        /// Gets the collection of cells.
+        /// </summary>
+        public Cell[,] Values => this.cells.Values;
+
+        /// <summary>
+        /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
+        /// </summary>
+        /// <param name="row">The desired cell row.</param>
+        /// <param name="column">The desired cell column.</param>
+        /// <returns>The <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.</returns>
+        public Cell? this[int row, int column]
+        {
+            get
+            {
+                if (row < 0 || row >= this.Rows)
+                {
+                    return null;
+                }
+
+                if (column < 0 || column >= this.Columns)
+                {
+                    return null;
+                }
+
+                return this.cells.Values[row, column];
+            }
+        }
+
+        /// <inheritdoc />
+        public override void ForEachRow(Func<Cell[], IteratorResult> func)
+        {
+            this.cells.ForEachRow(func);
+        }
+
+        /// <inheritdoc />
+        public override void ForEachCell(Func<Cell, IteratorResult> func)
+        {
+            this.cells.ForEachElement(func);
+        }
+
+        /// <inheritdoc />
+        public override Cell GetRandomCell() => this.cells.GetRandomElement();
+
+        /// <inheritdoc />
+        public override string GetCellContents(Cell cell) => " ";
+
+        /// <inheritdoc />
+        public override Rgba32 GetCellBackgroundColor(Cell cell) => Rgba32.ParseHex("#ffffff");
+
+        /// <inheritdoc />
+        public override void SaveImage(string filename, int cellSize = 10)
+        {
+            Image image = this.GetImage(cellSize);
+            image.Save(filename);
+        }
+
+        /// <inheritdoc />
+        public override Image GetImage(int cellSize = 10)
+        {
+            int width = cellSize * this.Columns;
+            int height = cellSize * this.Rows;
+
+            Image<Rgba32> image = new(width + 1, height + 1);
+            image.Mutate(imageContext =>
+            {
+                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
+                imageContext.BackgroundColor(backgroundColor);
+
+                Rgba32 wallColor = Rgba32.ParseHex("#000000");
+                Pen linePen = new(wallColor, 1);
+
+                Rectangle border = new(0, 0, width + 1, height + 1);
+                imageContext.Draw(linePen, border);
+
+                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
+                {
+                    this.ForEachCell(cell =>
+                    {
+                        int x1 = cell.Column * cellSize;
+                        int y1 = cell.Row * cellSize;
+
+                        int x2 = x1 + cellSize;
+                        int y2 = y1 + cellSize;
+
+                        switch (mode)
+                        {
+                            case ImageGenerationMode.Backgrounds:
+                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+                                Rectangle cellSquare = new(x1, y1, cellSize, cellSize);
+                                imageContext.Fill(cellBackgroundColor, cellSquare);
+                                break;
+
+                            case ImageGenerationMode.Walls:
+                                if (cell.North == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
+                                }
+
+                                if (cell.West == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.East))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.South))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
+                                }
+
+                                break;
+                        }
+                    });
+                }
+            });
+
+            return image;
+        }
+
+        /// <summary>
+        /// Gets all of the dead-end cells in the grid.
+        /// </summary>
+        /// <returns>The dead-end cells in the grid.</returns>
+        public List<Cell> GetDeadEnds()
+        {
+            List<Cell> cells = new();
+            this.cells.ForEachElement((cell) =>
+            {
+                if (cell.Links.Length == 1)
+                {
+                    cells.Add(cell);
+                }
+            });
+
+            return cells;
+        }
+
+        /// <summary>
+        /// Generates a string repsentation of the grid.
+        /// </summary>
+        /// <returns>A string repsentation of the grid.</returns>
+        public override string ToString()
+        {
+            const string HorizontalOpening = "   ";
+            const string HorizontalWall = "---";
+            const char VerticalWall = '|';
+            const char VerticalOpening = ' ';
+            const char Corner = '+';
+
+            StringBuilder sb = new();
+            sb.Append(Corner);
+            sb.AppendLine(string.Concat(Enumerable.Repeat(HorizontalWall + Corner, this.Columns)));
+
+            this.cells.ForEachRow(row =>
+            {
+                StringBuilder topBuilder = new();
+                topBuilder.Append(VerticalWall);
+
+                StringBuilder bottomBuilder = new();
+                bottomBuilder.Append(Corner);
+
+                foreach (Cell c in row)
+                {
+                    Cell cell = c ?? new Cell(-1, -1);
+                    char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
+                    string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
+
+                    topBuilder.Append($" {this.GetCellContents(cell)} ");
+                    topBuilder.Append(eastBoundary);
+
+                    bottomBuilder.Append(southBoundary);
+                    bottomBuilder.Append(Corner);
+                }
+
+                sb.AppendLine(topBuilder.ToString());
+                sb.AppendLine(bottomBuilder.ToString());
+            });
+
+            return sb.ToString();
+        }
+
+        /// <inheritdoc />
+        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
+        {
+            initialValue = new(row, column);
+            return true;
+        }
+
+        /// <inheritdoc />
+        protected override void Initialize()
+        {
+            this.cells.InitializeElements(this.TryGetInitialElementValue);
+            this.ConfigureCells();
+        }
+
+        /// <inheritdoc />
+        protected override void ConfigureCells()
+        {
+            for (int r = 0; r < this.Rows; r++)
+            {
+                for (int c = 0; c < this.Columns; c++)
+                {
+                    Cell cell = this.cells.Values[r, c];
+
+                    if (cell == null)
+                    {
+                        continue;
+                    }
+
+                    cell.North = this[r - 1, c];
+                    cell.South = this[r + 1, c];
+                    cell.West = this[r, c - 1];
+                    cell.East = this[r, c + 1];
+                }
+            }
+        }
+    }
+}

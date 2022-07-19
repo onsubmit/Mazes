@@ -11,17 +11,17 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Aldous-Broder algorithm.
     /// </summary>
-    public class AldousBroder : GenerationAlgorithm
+    public class AldousBroder : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes the Aldous-Broder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
             int unvisitedCells = grid.Size - 1;
 
-            Cell cell = grid.GetRandomElement();
+            Cell cell = grid.GetRandomCell();
 
             while (unvisitedCells > 0)
             {

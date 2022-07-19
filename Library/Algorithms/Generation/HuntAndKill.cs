@@ -11,16 +11,16 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Hunt-and-Kill algorithm.
     /// </summary>
-    public class HuntAndKill : GenerationAlgorithm
+    public class HuntAndKill : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes the Hunt-and-Kill algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
             // Begin and some random cell.
-            Cell? current = grid.GetRandomElement();
+            Cell? current = grid.GetRandomCell();
 
             // Perform random walk.
             while (current != null)
@@ -39,11 +39,11 @@ namespace Library.Algorithms.Generation
                     current = null;
 
                     // Find the first unvisited cell that is bordered by at least one visited cell.
-                    grid.ForEachElement(cell =>
+                    grid.ForEachCell(cell =>
                     {
                         if (cell.HasLink)
                         {
-                            return TwoDimensionalArrayIteratorResult.Continue;
+                            return IteratorResult.Continue;
                         }
 
                         IEnumerable<Cell> visitedNeighbors = cell.Neighbors.Where(n => n.HasLink);
@@ -54,10 +54,10 @@ namespace Library.Algorithms.Generation
                             Cell visitedNeighbor = visitedNeighbors.GetRandomElement();
                             current.Link(visitedNeighbor);
 
-                            return TwoDimensionalArrayIteratorResult.Stop;
+                            return IteratorResult.Stop;
                         }
 
-                        return TwoDimensionalArrayIteratorResult.Continue;
+                        return IteratorResult.Continue;
                     });
                 }
             }

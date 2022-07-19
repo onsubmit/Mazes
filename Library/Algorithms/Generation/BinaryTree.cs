@@ -11,15 +11,15 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Binary Tree algorithm.
     /// </summary>
-    public class BinaryTree : GenerationAlgorithm
+    public class BinaryTree : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes the Binary Tree algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
-            grid.ForEachElement(cell =>
+            grid.ForEachCell(cell =>
             {
                 List<Cell> neighbors = new();
                 neighbors.AddIfNotNull(cell.North);

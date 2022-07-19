@@ -11,16 +11,16 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements Wilson's algorithm.
     /// </summary>
-    public class Wilsons : GenerationAlgorithm
+    public class Wilsons : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes Wilson's algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
             List<Cell> unvisited = new();
-            grid.ForEachElement(cell => unvisited.Add(cell));
+            grid.ForEachCell(cell => unvisited.Add(cell));
 
             Cell first = unvisited.GetRandomElement();
             unvisited.Remove(first);

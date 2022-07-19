@@ -6,231 +6,97 @@
 namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using SixLabors.ImageSharp;
-    using SixLabors.ImageSharp.Drawing.Processing;
     using SixLabors.ImageSharp.PixelFormats;
-    using SixLabors.ImageSharp.Processing;
 
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class Grid : TwoDimensionalArray<Cell>
+    /// <typeparam name="TCell">The type of cells in the grid.</typeparam>
+    public abstract class Grid<TCell>
+        where TCell : Cell
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Grid"/> class.
+        /// Gets the size of the grid.
         /// </summary>
-        /// <param name="size">The number of rows and columns in the grid.</param>
-        public Grid(int size)
-            : this(size, size)
-        {
-        }
+        public abstract int Size { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Grid"/> class.
+        /// Performs the given action for each row of cells in the grid.
         /// </summary>
-        /// <param name="rows">The number of rows in the grid.</param>
-        /// <param name="columns">The number of columns in the grid.</param>
-        public Grid(int rows, int columns)
-            : base(rows, columns)
+        /// <param name="action">The action to perform.</param>
+        public void ForEachRow(Action<TCell[]> action)
         {
-            if (!this.GetType().IsSubclassOf(typeof(Grid)))
+            this.ForEachRow((element) =>
             {
-                // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
-                this.Initialize();
-            }
+                action(element);
+                return IteratorResult.Continue;
+            });
         }
 
         /// <summary>
-        /// Gets the collection of <see cref="Cell"/> objects.
+        /// Performs the given function for each row of cells in the grid.
         /// </summary>
-        public Cell[,] Cells => this.Values;
+        /// <param name="func">The function to perform.</param>
+        public abstract void ForEachRow(Func<TCell[], IteratorResult> func);
 
         /// <summary>
-        /// Gets the number of cells in the grid.
+        /// Performs the given action for each cell in the grid.
         /// </summary>
-        public override int Size => base.Size;
-
-        /// <summary>
-        /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
-        /// </summary>
-        /// <param name="row">The desired cell row.</param>
-        /// <param name="column">The desired cell column.</param>
-        /// <returns>The <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.</returns>
-        public Cell? this[int row, int column]
+        /// <param name="action">The action to perform.</param>
+        public void ForEachCell(Action<TCell> action)
         {
-            get
+            this.ForEachCell(element =>
             {
-                if (row < 0 || row >= this.Rows)
-                {
-                    return null;
-                }
-
-                if (column < 0 || column >= this.Columns)
-                {
-                    return null;
-                }
-
-                return this.Cells[row, column];
-            }
+                action(element);
+                return IteratorResult.Continue;
+            });
         }
+
+        /// <summary>
+        /// Performs the given function for each cell in the grid.
+        /// </summary>
+        /// <param name="func">The function to perform.</param>
+        public abstract void ForEachCell(Func<TCell, IteratorResult> func);
+
+        /// <summary>
+        /// Gets a random cell.
+        /// </summary>
+        /// <returns>A random cell.</returns>
+        public abstract TCell GetRandomCell();
 
         /// <summary>
         /// Gets the cell's contents.
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns>The cell's contents.</returns>
-        public virtual string GetCellContents(Cell cell) => " ";
+        public abstract string GetCellContents(TCell cell);
 
         /// <summary>
         /// Gets the cell's background color.
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns>The cell's background color.</returns>
-        public virtual Rgba32 GetCellBackgroundColor(Cell cell) => Rgba32.ParseHex("#ffffff");
+        public abstract Rgba32 GetCellBackgroundColor(TCell cell);
 
         /// <summary>
         /// Saves an image of the grid.
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="cellSize">The size of each cell.</param>
-        public void SaveImage(string filename, int cellSize = 10)
-        {
-            Image image = this.GetImage(cellSize);
-            image.Save(filename);
-        }
+        public abstract void SaveImage(string filename, int cellSize = 10);
 
         /// <summary>
         /// Gets an image representation of the grid.
         /// </summary>
         /// <param name="cellSize">The size of each cell.</param>
         /// <returns>The image.</returns>
-        public virtual Image GetImage(int cellSize = 10)
-        {
-            int width = cellSize * this.Columns;
-            int height = cellSize * this.Rows;
-
-            Image<Rgba32> image = new(width + 1, height + 1);
-            image.Mutate(imageContext =>
-            {
-                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
-                imageContext.BackgroundColor(backgroundColor);
-
-                Rgba32 wallColor = Rgba32.ParseHex("#000000");
-                Pen linePen = new(wallColor, 1);
-
-                Rectangle border = new(0, 0, width + 1, height + 1);
-                imageContext.Draw(linePen, border);
-
-                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
-                {
-                    this.ForEachElement(cell =>
-                    {
-                        int x1 = cell.Column * cellSize;
-                        int y1 = cell.Row * cellSize;
-
-                        int x2 = x1 + cellSize;
-                        int y2 = y1 + cellSize;
-
-                        switch (mode)
-                        {
-                            case ImageGenerationMode.Backgrounds:
-                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
-                                Rectangle cellSquare = new(x1, y1, cellSize, cellSize);
-                                imageContext.Fill(cellBackgroundColor, cellSquare);
-                                break;
-
-                            case ImageGenerationMode.Walls:
-                                if (cell.North == null)
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
-                                }
-
-                                if (cell.West == null)
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
-                                }
-
-                                if (!cell.IsLinkedTo(cell.East))
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
-                                }
-
-                                if (!cell.IsLinkedTo(cell.South))
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
-                                }
-
-                                break;
-                        }
-                    });
-                }
-            });
-
-            return image;
-        }
+        public abstract Image GetImage(int cellSize = 10);
 
         /// <summary>
-        /// Gets all of the dead-end cells in the grid.
+        /// Initializes the grid.
         /// </summary>
-        /// <returns>The dead-end cells in the grid.</returns>
-        public List<Cell> GetDeadEnds()
-        {
-            List<Cell> cells = new();
-            this.ForEachElement((cell) =>
-            {
-                if (cell.Links.Length == 1)
-                {
-                    cells.Add(cell);
-                }
-            });
-
-            return cells;
-        }
-
-        /// <summary>
-        /// Generates a string repsentation of the grid.
-        /// </summary>
-        /// <returns>A string repsentation of the grid.</returns>
-        public override string ToString()
-        {
-            const string HorizontalOpening = "   ";
-            const string HorizontalWall = "---";
-            const char VerticalWall = '|';
-            const char VerticalOpening = ' ';
-            const char Corner = '+';
-
-            StringBuilder sb = new();
-            sb.Append(Corner);
-            sb.AppendLine(string.Concat(Enumerable.Repeat(HorizontalWall + Corner, this.Columns)));
-
-            this.ForEachRow(row =>
-            {
-                StringBuilder topBuilder = new();
-                topBuilder.Append(VerticalWall);
-
-                StringBuilder bottomBuilder = new();
-                bottomBuilder.Append(Corner);
-
-                foreach (Cell c in row)
-                {
-                    Cell cell = c ?? new Cell(-1, -1);
-                    char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
-                    string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
-
-                    topBuilder.Append($" {this.GetCellContents(cell)} ");
-                    topBuilder.Append(eastBoundary);
-
-                    bottomBuilder.Append(southBoundary);
-                    bottomBuilder.Append(Corner);
-                }
-
-                sb.AppendLine(topBuilder.ToString());
-                sb.AppendLine(bottomBuilder.ToString());
-            });
-
-            return sb.ToString();
-        }
+        protected abstract void Initialize();
 
         /// <summary>
         /// Tries to get the initial value for each element.
@@ -239,43 +105,11 @@ namespace Library.Grids
         /// <param name="column">The column.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        protected virtual bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
-        {
-            initialValue = new(row, column);
-            return true;
-        }
-
-        /// <summary>
-        /// Initializes the grid.
-        /// </summary>
-        protected void Initialize()
-        {
-            this.InitializeElements(this.TryGetInitialElementValue);
-            this.ConfigureCells();
-        }
+        protected abstract bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out TCell? initialValue);
 
         /// <summary>
         /// Configures the cell neighbors.
         /// </summary>
-        protected void ConfigureCells()
-        {
-            for (int r = 0; r < this.Rows; r++)
-            {
-                for (int c = 0; c < this.Columns; c++)
-                {
-                    Cell cell = this.Cells[r, c];
-
-                    if (cell == null)
-                    {
-                        continue;
-                    }
-
-                    cell.North = this[r - 1, c];
-                    cell.South = this[r + 1, c];
-                    cell.West = this[r, c - 1];
-                    cell.East = this[r, c + 1];
-                }
-            }
-        }
+        protected abstract void ConfigureCells();
     }
 }

@@ -35,7 +35,7 @@ namespace Library.Grids
         /// Gets a random cell from the masked grid.
         /// </summary>
         /// <returns>A random cell from the masked grid.</returns>
-        public override Cell GetRandomElement()
+        public override Cell GetRandomCell()
         {
             (int r, int c) = this.mask.GetCoordinatesOfRandomEnabledCell();
             return this.Values[r, c];

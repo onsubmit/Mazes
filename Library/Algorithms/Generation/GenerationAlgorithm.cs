@@ -8,9 +8,13 @@ namespace Library.Algorithms.Generation
     using Library.Grids;
 
     /// <summary>
-    /// Base abstract implementation of <see cref="IGenerationAlgorithm"/>.
+    /// Base abstract implementation of <see cref="IGenerationAlgorithm{TGrid, TCell}"/>.
     /// </summary>
-    public abstract class GenerationAlgorithm : IGenerationAlgorithm
+    /// <typeparam name="TGrid">The type of grid.</typeparam>
+    /// <typeparam name="TCell">The type of cell.</typeparam>
+    public abstract class GenerationAlgorithm<TGrid, TCell> : IGenerationAlgorithm<TGrid, TCell>
+        where TGrid : Grid<TCell>
+        where TCell : Cell
     {
         /// <summary>
         /// Gets the algorithm's name.
@@ -21,6 +25,6 @@ namespace Library.Algorithms.Generation
         /// Executes the algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public abstract void Execute(Grid grid);
+        public abstract void Execute(TGrid grid);
     }
 }

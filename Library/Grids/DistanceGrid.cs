@@ -6,9 +6,9 @@
 namespace Library.Grids
 {
     /// <summary>
-    /// Version of <see cref="Grid"/> which can render the distance numbers for each cell.
+    /// Version of <see cref="CartesianGrid"/> which can render the distance numbers for each cell.
     /// </summary>
-    public class DistanceGrid : Grid
+    public class DistanceGrid : CartesianGrid
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DistanceGrid"/> class.

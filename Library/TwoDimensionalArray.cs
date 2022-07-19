@@ -11,7 +11,7 @@ namespace Library
     /// Represents a two dimensional array.
     /// </summary>
     /// <typeparam name="T">The type of the array's values.</typeparam>
-    public abstract class TwoDimensionalArray<T>
+    public class TwoDimensionalArray<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoDimensionalArray{T}"/> class.
@@ -76,7 +76,7 @@ namespace Library
         /// <summary>
         /// Gets the number of elements in the array.
         /// </summary>
-        public virtual int Size => this.Rows * this.Columns;
+        public int Size => this.Rows * this.Columns;
 
         /// <summary>
         /// Gets or sets the collection of values.
@@ -92,7 +92,7 @@ namespace Library
             this.ForEachRow((element) =>
             {
                 action(element);
-                return TwoDimensionalArrayIteratorResult.Continue;
+                return IteratorResult.Continue;
             });
         }
 
@@ -100,7 +100,7 @@ namespace Library
         /// Performs the given function for each row of elements in the array.
         /// </summary>
         /// <param name="func">The function to perform.</param>
-        public void ForEachRow(Func<T[], TwoDimensionalArrayIteratorResult> func)
+        public void ForEachRow(Func<T[], IteratorResult> func)
         {
             for (int r = 0; r < this.Rows; r++)
             {
@@ -108,7 +108,7 @@ namespace Library
                     .Select(c => this.Values[r, c])
                     .ToArray();
 
-                if (func(row) == TwoDimensionalArrayIteratorResult.Stop)
+                if (func(row) == IteratorResult.Stop)
                 {
                     return;
                 }
@@ -119,7 +119,7 @@ namespace Library
         /// Gets a random element.
         /// </summary>
         /// <returns>A random element.</returns>
-        public virtual T GetRandomElement()
+        public T GetRandomElement()
         {
             int row = Rand.Instance.Next(this.Rows);
             int column = Rand.Instance.Next(this.Columns);
@@ -136,7 +136,7 @@ namespace Library
             this.ForEachElement(element =>
             {
                 action(element);
-                return TwoDimensionalArrayIteratorResult.Continue;
+                return IteratorResult.Continue;
             });
         }
 
@@ -144,7 +144,7 @@ namespace Library
         /// Performs the given function for each element in the array.
         /// </summary>
         /// <param name="func">The function to perform.</param>
-        public void ForEachElement(Func<T, TwoDimensionalArrayIteratorResult> func)
+        public void ForEachElement(Func<T, IteratorResult> func)
         {
             this.ForEachRow((row) =>
             {
@@ -155,13 +155,13 @@ namespace Library
                         continue;
                     }
 
-                    if (func(row[c]) == TwoDimensionalArrayIteratorResult.Stop)
+                    if (func(row[c]) == IteratorResult.Stop)
                     {
-                        return TwoDimensionalArrayIteratorResult.Stop;
+                        return IteratorResult.Stop;
                     }
                 }
 
-                return TwoDimensionalArrayIteratorResult.Continue;
+                return IteratorResult.Continue;
             });
         }
 
@@ -169,7 +169,7 @@ namespace Library
         /// Initializes the array.
         /// </summary>
         /// <param name="initialValue">Initial value of each element.</param>
-        protected void InitializeElements(T initialValue)
+        public void InitializeElements(T initialValue)
         {
             this.Values = new T[this.Rows, this.Columns];
             for (int r = 0; r < this.Rows; r++)
@@ -185,7 +185,7 @@ namespace Library
         /// Initializes the array.
         /// </summary>
         /// <param name="tryGetInitialElementValue">Function that attempts to get the initial value of each element.</param>
-        protected void InitializeElements(TryGetInitialElementValueDelegate tryGetInitialElementValue)
+        public void InitializeElements(TryGetInitialElementValueDelegate tryGetInitialElementValue)
         {
             this.Values = new T[this.Rows, this.Columns];
 

@@ -11,15 +11,15 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Recursive Backtracker algorithm.
     /// </summary>
-    public class RecursiveBacktracker : GenerationAlgorithm
+    public class RecursiveBacktracker : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes the Recursive Backtracker algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
-            this.Execute(grid.GetRandomElement());
+            this.Execute(grid.GetRandomCell());
         }
 
         /// <summary>

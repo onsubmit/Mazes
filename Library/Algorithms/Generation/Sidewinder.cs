@@ -11,13 +11,13 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Sidewinder algorithm.
     /// </summary>
-    public class Sidewinder : GenerationAlgorithm
+    public class Sidewinder : GenerationAlgorithm<CartesianGrid, Cell>
     {
         /// <summary>
         /// Executes the Sidewinder algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(Grid grid)
+        public override void Execute(CartesianGrid grid)
         {
             grid.ForEachRow(row =>
             {

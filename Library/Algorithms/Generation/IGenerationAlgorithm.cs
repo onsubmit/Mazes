@@ -10,12 +10,16 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Interface for the maze generation algorithms.
     /// </summary>
-    public interface IGenerationAlgorithm
+    /// <typeparam name="TGrid">The type of grid.</typeparam>
+    /// <typeparam name="TCell">The type of cell.</typeparam>
+    public interface IGenerationAlgorithm<TGrid, TCell>
+        where TGrid : Grid<TCell>
+        where TCell : Cell
     {
         /// <summary>
         /// Executes the algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        void Execute(Grid grid);
+        void Execute(TGrid grid);
     }
 }

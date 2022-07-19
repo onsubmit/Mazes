@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Program
 {
+    using Library;
     using Library.Algorithms.Generation;
     using Library.Grids;
 
@@ -17,8 +18,8 @@ namespace Program
         private const int Size = 20;
         private const int TotalCells = Size * Size;
 
-        private static readonly GenerationAlgorithm[] Algorithms =
-            new GenerationAlgorithm[]
+        private static readonly GenerationAlgorithm<CartesianGrid, Cell>[] Algorithms =
+            new GenerationAlgorithm<CartesianGrid, Cell>[]
             {
                 new BinaryTree(),
                 new Sidewinder(),
@@ -32,15 +33,15 @@ namespace Program
         /// </summary>
         public static void GenerateReport()
         {
-            Dictionary<GenerationAlgorithm, int> averages = new();
-            foreach (GenerationAlgorithm algorithm in Algorithms)
+            Dictionary<GenerationAlgorithm<CartesianGrid, Cell>, int> averages = new();
+            foreach (GenerationAlgorithm<CartesianGrid, Cell> algorithm in Algorithms)
             {
                 Console.WriteLine($"Running {algorithm.Name}...");
 
                 List<int> deadEndCounts = new();
                 for (int i = 0; i < Tries; i++)
                 {
-                    Grid grid = new(Size);
+                    CartesianGrid grid = new(Size);
                     algorithm.Execute(grid);
                     deadEndCounts.Add(grid.GetDeadEnds().Count);
                 }
@@ -53,11 +54,11 @@ namespace Program
             Console.WriteLine($"Average dead-ends per {Size}x{Size} maze ({TotalCells} cells):");
             Console.WriteLine();
 
-            Dictionary<GenerationAlgorithm, int> sortedAverages = averages
+            Dictionary<GenerationAlgorithm<CartesianGrid, Cell>, int> sortedAverages = averages
                 .OrderByDescending(x => x.Value)
                 .ToDictionary(x => x.Key, x => x.Value);
 
-            foreach ((GenerationAlgorithm algorithm, int value) in sortedAverages)
+            foreach ((GenerationAlgorithm<CartesianGrid, Cell> algorithm, int value) in sortedAverages)
             {
                 float percentage = value * 100.0f / TotalCells;
                 Console.WriteLine("{0,14} : {1,3}/{2} ({3:0}%)", algorithm.Name, value, TotalCells, percentage);

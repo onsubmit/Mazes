@@ -25,7 +25,7 @@ namespace Program.Demos
 
             new RecursiveBacktracker().Execute(grid);
 
-            Cell startingCell = grid.GetRandomElement();
+            Cell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances();
 
             grid.SaveImage($"AsciiGrid.png", 40);
