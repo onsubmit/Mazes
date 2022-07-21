@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Program
 {
-    using Library;
     using Library.Algorithms.Generation;
+    using Library.Cells;
     using Library.Grids;
 
     /// <summary>
@@ -18,8 +18,8 @@ namespace Program
         private const int Size = 20;
         private const int TotalCells = Size * Size;
 
-        private static readonly GenerationAlgorithm<CartesianGrid, Cell>[] Algorithms =
-            new GenerationAlgorithm<CartesianGrid, Cell>[]
+        private static readonly GenerationAlgorithm<CartesianGrid, CartesianCell>[] Algorithms =
+            new GenerationAlgorithm<CartesianGrid, CartesianCell>[]
             {
                 new BinaryTree(),
                 new Sidewinder(),
@@ -33,8 +33,8 @@ namespace Program
         /// </summary>
         public static void GenerateReport()
         {
-            Dictionary<GenerationAlgorithm<CartesianGrid, Cell>, int> averages = new();
-            foreach (GenerationAlgorithm<CartesianGrid, Cell> algorithm in Algorithms)
+            Dictionary<GenerationAlgorithm<CartesianGrid, CartesianCell>, int> averages = new();
+            foreach (GenerationAlgorithm<CartesianGrid, CartesianCell> algorithm in Algorithms)
             {
                 Console.WriteLine($"Running {algorithm.Name}...");
 
@@ -54,11 +54,11 @@ namespace Program
             Console.WriteLine($"Average dead-ends per {Size}x{Size} maze ({TotalCells} cells):");
             Console.WriteLine();
 
-            Dictionary<GenerationAlgorithm<CartesianGrid, Cell>, int> sortedAverages = averages
+            Dictionary<GenerationAlgorithm<CartesianGrid, CartesianCell>, int> sortedAverages = averages
                 .OrderByDescending(x => x.Value)
                 .ToDictionary(x => x.Key, x => x.Value);
 
-            foreach ((GenerationAlgorithm<CartesianGrid, Cell> algorithm, int value) in sortedAverages)
+            foreach ((GenerationAlgorithm<CartesianGrid, CartesianCell> algorithm, int value) in sortedAverages)
             {
                 float percentage = value * 100.0f / TotalCells;
                 Console.WriteLine("{0,14} : {1,3}/{2} ({3:0}%)", algorithm.Name, value, TotalCells, percentage);

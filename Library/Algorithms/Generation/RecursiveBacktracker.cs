@@ -5,13 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Extensions;
     using Library.Grids;
 
     /// <summary>
     /// Implements the Recursive Backtracker algorithm.
     /// </summary>
-    public class RecursiveBacktracker : GenerationAlgorithm<CartesianGrid, Cell>
+    public class RecursiveBacktracker : GenerationAlgorithm<CartesianGrid, CartesianCell>
     {
         /// <summary>
         /// Executes the Recursive Backtracker algorithm.
@@ -26,14 +27,14 @@ namespace Library.Algorithms.Generation
         /// Executes the Recursive Backtracker algorithm.
         /// </summary>
         /// <param name="startingCell">The starting cell.</param>
-        public void Execute(Cell startingCell)
+        public void Execute(CartesianCell startingCell)
         {
-            Stack<Cell> stack = new();
+            Stack<CartesianCell> stack = new();
             stack.Push(startingCell);
 
-            while (stack.TryPeek(out Cell? current))
+            while (stack.TryPeek(out CartesianCell? current))
             {
-                IEnumerable<Cell> unvisitedNeighbors = current.Neighbors.Where(n => !n.HasLink);
+                IEnumerable<CartesianCell> unvisitedNeighbors = current.Neighbors.Where(n => !n.HasLink);
 
                 if (!unvisitedNeighbors.Any())
                 {
@@ -45,7 +46,7 @@ namespace Library.Algorithms.Generation
                 }
 
                 // Choose an unvisited neighbor.
-                Cell neighbor = unvisitedNeighbors.GetRandomElement();
+                CartesianCell neighbor = unvisitedNeighbors.GetRandomElement();
 
                 // Link it to the current cell.
                 current.Link(neighbor);

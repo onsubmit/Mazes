@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Program.Demos
 {
-    using Library;
     using Library.Algorithms.Generation;
+    using Library.Cells;
     using Library.Grids;
     using Library.Masks;
 

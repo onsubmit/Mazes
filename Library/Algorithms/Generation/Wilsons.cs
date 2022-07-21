@@ -5,13 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Extensions;
     using Library.Grids;
 
     /// <summary>
     /// Implements Wilson's algorithm.
     /// </summary>
-    public class Wilsons : GenerationAlgorithm<CartesianGrid, Cell>
+    public class Wilsons : GenerationAlgorithm<CartesianGrid, CartesianCell>
     {
         /// <summary>
         /// Executes Wilson's algorithm.
@@ -19,16 +20,16 @@ namespace Library.Algorithms.Generation
         /// <param name="grid">The maze grid.</param>
         public override void Execute(CartesianGrid grid)
         {
-            List<Cell> unvisited = new();
+            List<CartesianCell> unvisited = new();
             grid.ForEachCell(cell => unvisited.Add(cell));
 
-            Cell first = unvisited.GetRandomElement();
+            CartesianCell first = unvisited.GetRandomElement();
             unvisited.Remove(first);
 
             while (unvisited.Any())
             {
-                List<Cell> path = new();
-                Cell cell = unvisited.GetRandomElement();
+                List<CartesianCell> path = new();
+                CartesianCell cell = unvisited.GetRandomElement();
                 path.Add(cell);
 
                 while (unvisited.Contains(cell))

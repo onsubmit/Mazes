@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Library.Grids
 {
+    using Library.Cells;
     using SixLabors.ImageSharp.PixelFormats;
 
     /// <summary>
@@ -51,7 +52,7 @@ namespace Library.Grids
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns>The cell's background color.</returns>
-        public override Rgba32 GetCellBackgroundColor(Cell cell)
+        public override Rgba32 GetCellBackgroundColor(CartesianCell cell)
         {
             if (this.Distances == null || !this.Distances.HasCell(cell))
             {

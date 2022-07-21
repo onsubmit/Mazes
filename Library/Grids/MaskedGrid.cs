@@ -6,6 +6,7 @@
 namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
+    using Library.Cells;
     using Library.Masks;
 
     /// <summary>
@@ -35,7 +36,7 @@ namespace Library.Grids
         /// Gets a random cell from the masked grid.
         /// </summary>
         /// <returns>A random cell from the masked grid.</returns>
-        public override Cell GetRandomCell()
+        public override CartesianCell GetRandomCell()
         {
             (int r, int c) = this.mask.GetCoordinatesOfRandomEnabledCell();
             return this.Values[r, c];
@@ -48,7 +49,7 @@ namespace Library.Grids
         /// <param name="column">The column.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
+        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
         {
             if (!this.mask[row, column])
             {
@@ -56,7 +57,7 @@ namespace Library.Grids
                 return false;
             }
 
-            initialValue = new Cell(row, column);
+            initialValue = new CartesianCell(row, column);
             return true;
         }
     }

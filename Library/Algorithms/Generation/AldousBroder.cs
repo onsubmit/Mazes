@@ -5,13 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Extensions;
     using Library.Grids;
 
     /// <summary>
     /// Implements the Aldous-Broder algorithm.
     /// </summary>
-    public class AldousBroder : GenerationAlgorithm<CartesianGrid, Cell>
+    public class AldousBroder : GenerationAlgorithm<CartesianGrid, CartesianCell>
     {
         /// <summary>
         /// Executes the Aldous-Broder algorithm.

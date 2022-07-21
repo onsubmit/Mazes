@@ -6,6 +6,7 @@
 namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
+    using Library.Cells;
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.PixelFormats;
 

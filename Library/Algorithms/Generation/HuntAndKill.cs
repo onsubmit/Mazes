@@ -5,13 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Extensions;
     using Library.Grids;
 
     /// <summary>
     /// Implements the Hunt-and-Kill algorithm.
     /// </summary>
-    public class HuntAndKill : GenerationAlgorithm<CartesianGrid, Cell>
+    public class HuntAndKill : GenerationAlgorithm<CartesianGrid, CartesianCell>
     {
         /// <summary>
         /// Executes the Hunt-and-Kill algorithm.
@@ -20,16 +21,16 @@ namespace Library.Algorithms.Generation
         public override void Execute(CartesianGrid grid)
         {
             // Begin and some random cell.
-            Cell? current = grid.GetRandomCell();
+            CartesianCell? current = grid.GetRandomCell();
 
             // Perform random walk.
             while (current != null)
             {
-                IEnumerable<Cell> unvisitedNeighbors = current.Neighbors.Where(n => !n.HasLink);
+                IEnumerable<CartesianCell> unvisitedNeighbors = current.Neighbors.Where(n => !n.HasLink);
                 if (unvisitedNeighbors.Any())
                 {
                     // Avoid cells we've already visited.
-                    Cell unvisitedNeighbor = unvisitedNeighbors.GetRandomElement();
+                    CartesianCell unvisitedNeighbor = unvisitedNeighbors.GetRandomElement();
                     current.Link(unvisitedNeighbor);
                     current = unvisitedNeighbor;
                 }
@@ -46,7 +47,7 @@ namespace Library.Algorithms.Generation
                             return IteratorResult.Continue;
                         }
 
-                        IEnumerable<Cell> visitedNeighbors = cell.Neighbors.Where(n => n.HasLink);
+                        IEnumerable<CartesianCell> visitedNeighbors = cell.Neighbors.Where(n => n.HasLink);
                         if (visitedNeighbors.Any())
                         {
                             current = cell;

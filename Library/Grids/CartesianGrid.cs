@@ -7,20 +7,21 @@ namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Library.Cells;
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.Drawing.Processing;
     using SixLabors.ImageSharp.PixelFormats;
     using SixLabors.ImageSharp.Processing;
 
     /// <summary>
-    /// Represents a Cartesian maze grid, effectively a collection of <see cref="Cell"/> objects arranged in x-y coordinates.
+    /// Represents a Cartesian maze grid, effectively a collection of <see cref="CartesianCell"/> objects arranged in x-y coordinates.
     /// </summary>
-    public class CartesianGrid : Grid<Cell>
+    public class CartesianGrid : Grid<CartesianCell>
     {
         /// <summary>
-        /// Gets the collection of <see cref="Cell"/> objects.
+        /// Gets the collection of <see cref="CartesianCell"/> objects.
         /// </summary>
-        private readonly TwoDimensionalArray<Cell> cells;
+        private readonly TwoDimensionalArray<CartesianCell> cells;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianGrid"/> class.
@@ -58,15 +59,15 @@ namespace Library.Grids
         /// <summary>
         /// Gets the collection of cells.
         /// </summary>
-        public Cell[,] Values => this.cells.Values;
+        public CartesianCell[,] Values => this.cells.Values;
 
         /// <summary>
         /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
         /// </summary>
         /// <param name="row">The desired cell row.</param>
         /// <param name="column">The desired cell column.</param>
-        /// <returns>The <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.</returns>
-        public Cell? this[int row, int column]
+        /// <returns>The <see cref="CartesianCell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.</returns>
+        public CartesianCell? this[int row, int column]
         {
             get
             {
@@ -85,25 +86,25 @@ namespace Library.Grids
         }
 
         /// <inheritdoc />
-        public override void ForEachRow(Func<Cell[], IteratorResult> func)
+        public override void ForEachRow(Func<CartesianCell[], IteratorResult> func)
         {
             this.cells.ForEachRow(func);
         }
 
         /// <inheritdoc />
-        public override void ForEachCell(Func<Cell, IteratorResult> func)
+        public override void ForEachCell(Func<CartesianCell, IteratorResult> func)
         {
             this.cells.ForEachElement(func);
         }
 
         /// <inheritdoc />
-        public override Cell GetRandomCell() => this.cells.GetRandomElement();
+        public override CartesianCell GetRandomCell() => this.cells.GetRandomElement();
 
         /// <inheritdoc />
-        public override string GetCellContents(Cell cell) => " ";
+        public override string GetCellContents(CartesianCell cell) => " ";
 
         /// <inheritdoc />
-        public override Rgba32 GetCellBackgroundColor(Cell cell) => Rgba32.ParseHex("#ffffff");
+        public override Rgba32 GetCellBackgroundColor(CartesianCell cell) => Rgba32.ParseHex("#ffffff");
 
         /// <inheritdoc />
         public override void SaveImage(string filename, int cellSize = 10)
@@ -182,9 +183,9 @@ namespace Library.Grids
         /// Gets all of the dead-end cells in the grid.
         /// </summary>
         /// <returns>The dead-end cells in the grid.</returns>
-        public List<Cell> GetDeadEnds()
+        public List<CartesianCell> GetDeadEnds()
         {
-            List<Cell> cells = new();
+            List<CartesianCell> cells = new();
             this.cells.ForEachElement((cell) =>
             {
                 if (cell.Links.Length == 1)
@@ -220,9 +221,9 @@ namespace Library.Grids
                 StringBuilder bottomBuilder = new();
                 bottomBuilder.Append(Corner);
 
-                foreach (Cell c in row)
+                foreach (CartesianCell c in row)
                 {
-                    Cell cell = c ?? new Cell(-1, -1);
+                    CartesianCell cell = c ?? new CartesianCell(-1, -1);
                     char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
                     string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
 
@@ -241,7 +242,7 @@ namespace Library.Grids
         }
 
         /// <inheritdoc />
-        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out Cell? initialValue)
+        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
         {
             initialValue = new(row, column);
             return true;
@@ -261,7 +262,7 @@ namespace Library.Grids
             {
                 for (int c = 0; c < this.Columns; c++)
                 {
-                    Cell cell = this.cells.Values[r, c];
+                    CartesianCell cell = this.cells.Values[r, c];
 
                     if (cell == null)
                     {

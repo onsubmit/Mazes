@@ -5,13 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Extensions;
     using Library.Grids;
 
     /// <summary>
     /// Implements the Binary Tree algorithm.
     /// </summary>
-    public class BinaryTree : GenerationAlgorithm<CartesianGrid, Cell>
+    public class BinaryTree : GenerationAlgorithm<CartesianGrid, CartesianCell>
     {
         /// <summary>
         /// Executes the Binary Tree algorithm.

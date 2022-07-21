@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Solving
 {
+    using Library.Cells;
     using Library.Grids;
 
     /// <summary>

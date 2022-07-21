@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library
 {
+    using Library.Cells;
+
     /// <summary>
     /// Used to record the distance of each cell from the start point.
     /// </summary>

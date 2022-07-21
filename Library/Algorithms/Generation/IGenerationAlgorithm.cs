@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Library.Algorithms.Generation
 {
+    using Library.Cells;
     using Library.Grids;
 
     /// <summary>

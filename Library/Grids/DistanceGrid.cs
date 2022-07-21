@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Library.Grids
 {
+    using Library.Cells;
+
     /// <summary>
     /// Version of <see cref="CartesianGrid"/> which can render the distance numbers for each cell.
     /// </summary>
@@ -56,7 +58,7 @@ namespace Library.Grids
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns>The cell contents.</returns>
-        public override string GetCellContents(Cell cell)
+        public override string GetCellContents(CartesianCell cell)
         {
             if (this.Distances == null || !this.Distances.HasCell(cell))
             {
