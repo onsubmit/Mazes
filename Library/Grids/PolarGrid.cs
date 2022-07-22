@@ -16,7 +16,7 @@ namespace Library.Grids
     /// <summary>
     /// Represents a polar grid, allowing the creation of circular mazes.
     /// </summary>
-    public class PolarGrid : Grid<PolarCell>
+    public sealed class PolarGrid : Grid<PolarCell>
     {
         /// <summary>
         /// The collection of <see cref="CartesianCell"/> objects.

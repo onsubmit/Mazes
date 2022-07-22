@@ -23,7 +23,7 @@ namespace Program.Demos
             AsciiMask mask = AsciiMask.FromFile("mask.txt");
             MaskedGrid grid = new(mask);
 
-            new RecursiveBacktracker<CartesianGrid, CartesianCell>().Execute(grid);
+            new RecursiveBacktracker<MaskedGrid, CartesianCell>().Execute(grid);
 
             Cell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances();

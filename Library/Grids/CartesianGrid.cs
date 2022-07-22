@@ -40,7 +40,13 @@ namespace Library.Grids
         public CartesianGrid(int rows, int columns)
         {
             this.cells = new(rows, columns);
-            this.Initialize();
+
+            if (!this.GetType().IsSubclassOf(typeof(CartesianGrid)))
+            {
+                // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
+                // This is a code smell... fix this, doofus.
+                this.Initialize();
+            }
         }
 
         /// <summary>
@@ -247,7 +253,7 @@ namespace Library.Grids
         /// <inheritdoc />
         protected override void Initialize()
         {
-            this.cells.InitializeElements(TryGetInitialElementValue);
+            this.cells.InitializeElements(this.TryGetInitialElementValue);
             this.ConfigureCells();
         }
 
@@ -280,7 +286,7 @@ namespace Library.Grids
         /// <param name="column">The column.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        private static bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
+        protected virtual bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
         {
             initialValue = new(row, column);
             return true;

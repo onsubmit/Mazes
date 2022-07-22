@@ -12,7 +12,7 @@ namespace Library.Grids
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public class MaskedGrid : ColoredGrid
+    public sealed class MaskedGrid : ColoredGrid
     {
         private readonly Mask mask;
 
@@ -24,6 +24,7 @@ namespace Library.Grids
             : base(mask.Rows, mask.Columns)
         {
             this.mask = mask;
+
             this.Initialize();
         }
 
@@ -49,7 +50,7 @@ namespace Library.Grids
         /// <param name="column">The column.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        protected bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
+        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
         {
             if (!this.mask[row, column])
             {

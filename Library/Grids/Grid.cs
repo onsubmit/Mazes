@@ -7,7 +7,6 @@ namespace Library.Grids
 {
     using Library.Cells;
     using SixLabors.ImageSharp;
-    using SixLabors.ImageSharp.PixelFormats;
 
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.

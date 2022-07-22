@@ -20,10 +20,10 @@ namespace Program.Demos
         /// </summary>
         public static void Execute()
         {
-            ImageMask mask = ImageMask.FromFile("mandelbrot.png");
+            ImageMask mask = ImageMask.FromFile("maze_text.png");
             MaskedGrid grid = new(mask);
 
-            new RecursiveBacktracker<CartesianGrid, CartesianCell>().Execute(grid);
+            new RecursiveBacktracker<MaskedGrid, CartesianCell>().Execute(grid);
 
             Cell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances();

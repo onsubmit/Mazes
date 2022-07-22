@@ -10,7 +10,7 @@ namespace Library.Grids
     /// <summary>
     /// Version of <see cref="CartesianGrid"/> which can render the distance numbers for each cell.
     /// </summary>
-    public class DistanceGrid : CartesianGrid
+    public abstract class DistanceGrid : CartesianGrid
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DistanceGrid"/> class.
@@ -29,6 +29,12 @@ namespace Library.Grids
         public DistanceGrid(int rows, int columns)
             : base(rows, columns)
         {
+            if (!this.GetType().IsSubclassOf(typeof(DistanceGrid)))
+            {
+                // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
+                // This is a code smell... fix this, doofus.
+                this.Initialize();
+            }
         }
 
         /// <summary>

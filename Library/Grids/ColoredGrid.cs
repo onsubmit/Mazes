@@ -32,6 +32,12 @@ namespace Library.Grids
         public ColoredGrid(int rows, int columns)
             : base(rows, columns)
         {
+            if (!this.GetType().IsSubclassOf(typeof(ColoredGrid)))
+            {
+                // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
+                // This is a code smell... fix this, doofus.
+                this.Initialize();
+            }
         }
 
         /// <summary>
