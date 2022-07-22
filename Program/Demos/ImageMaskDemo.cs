@@ -23,7 +23,7 @@ namespace Program.Demos
             ImageMask mask = ImageMask.FromFile("mandelbrot.png");
             MaskedGrid grid = new(mask);
 
-            new RecursiveBacktracker().Execute(grid);
+            new RecursiveBacktracker<CartesianGrid, CartesianCell>().Execute(grid);
 
             Cell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances();

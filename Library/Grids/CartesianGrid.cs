@@ -19,7 +19,7 @@ namespace Library.Grids
     public class CartesianGrid : Grid<CartesianCell>
     {
         /// <summary>
-        /// Gets the collection of <see cref="CartesianCell"/> objects.
+        /// The collection of <see cref="CartesianCell"/> objects.
         /// </summary>
         private readonly TwoDimensionalArray<CartesianCell> cells;
 
@@ -53,8 +53,10 @@ namespace Library.Grids
         /// </summary>
         public int Columns => this.cells.Columns;
 
-        /// <inheritdoc />
-        public override int Size => this.cells.Size;
+        /// <summary>
+        /// Gets the size of the grid.
+        /// </summary>
+        public virtual int Size => this.cells.Size;
 
         /// <summary>
         /// Gets the collection of cells.
@@ -62,7 +64,7 @@ namespace Library.Grids
         public CartesianCell[,] Values => this.cells.Values;
 
         /// <summary>
-        /// Gets the <see cref="Cell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
+        /// Gets the <see cref="CartesianCell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
         /// </summary>
         /// <param name="row">The desired cell row.</param>
         /// <param name="column">The desired cell column.</param>
@@ -100,18 +102,19 @@ namespace Library.Grids
         /// <inheritdoc />
         public override CartesianCell GetRandomCell() => this.cells.GetRandomElement();
 
-        /// <inheritdoc />
-        public override string GetCellContents(CartesianCell cell) => " ";
+        /// <summary>
+        /// Gets the cell's contents.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's contents.</returns>
+        public virtual string GetCellContents(CartesianCell cell) => " ";
 
-        /// <inheritdoc />
-        public override Rgba32 GetCellBackgroundColor(CartesianCell cell) => Rgba32.ParseHex("#ffffff");
-
-        /// <inheritdoc />
-        public override void SaveImage(string filename, int cellSize = 10)
-        {
-            Image image = this.GetImage(cellSize);
-            image.Save(filename);
-        }
+        /// <summary>
+        /// Gets the cell's background color.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's background color.</returns>
+        public virtual Rgba32 GetCellBackgroundColor(CartesianCell cell) => Rgba32.ParseHex("#ffffff");
 
         /// <inheritdoc />
         public override Image GetImage(int cellSize = 10)
@@ -242,16 +245,9 @@ namespace Library.Grids
         }
 
         /// <inheritdoc />
-        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
-        {
-            initialValue = new(row, column);
-            return true;
-        }
-
-        /// <inheritdoc />
         protected override void Initialize()
         {
-            this.cells.InitializeElements(this.TryGetInitialElementValue);
+            this.cells.InitializeElements(TryGetInitialElementValue);
             this.ConfigureCells();
         }
 
@@ -275,6 +271,19 @@ namespace Library.Grids
                     cell.East = this[r, c + 1];
                 }
             }
+        }
+
+        /// <summary>
+        /// Tries to get the initial value for each element.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="initialValue">The initial value.</param>
+        /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
+        private static bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
+        {
+            initialValue = new(row, column);
+            return true;
         }
     }
 }

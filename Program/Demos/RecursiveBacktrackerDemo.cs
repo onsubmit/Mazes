@@ -6,6 +6,7 @@
 namespace Program.Demos
 {
     using Library.Algorithms.Generation;
+    using Library.Cells;
     using Library.Grids;
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace Program.Demos
             for (int i = 0; i < 6; i++)
             {
                 ColoredGrid grid = new(20);
-                new RecursiveBacktracker().Execute(grid);
+                new RecursiveBacktracker<CartesianGrid, CartesianCell>().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
                 grid.SaveImage($"RecursiveBacktracker{i}.png", 20);
             }

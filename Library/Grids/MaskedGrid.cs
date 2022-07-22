@@ -49,7 +49,7 @@ namespace Library.Grids
         /// <param name="column">The column.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        protected override bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
+        protected bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out CartesianCell? initialValue)
         {
             if (!this.mask[row, column])
             {

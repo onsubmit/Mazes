@@ -12,13 +12,17 @@ namespace Library.Algorithms.Generation
     /// <summary>
     /// Implements the Recursive Backtracker algorithm.
     /// </summary>
-    public class RecursiveBacktracker : GenerationAlgorithm<CartesianGrid, CartesianCell>
+    /// <typeparam name="TGrid">The type of grid.</typeparam>
+    /// <typeparam name="TCell">The type of cell.</typeparam>
+    public class RecursiveBacktracker<TGrid, TCell> : GenerationAlgorithm<TGrid, TCell>
+        where TGrid : Grid<TCell>
+        where TCell : Cell
     {
         /// <summary>
         /// Executes the Recursive Backtracker algorithm.
         /// </summary>
         /// <param name="grid">The maze grid.</param>
-        public override void Execute(CartesianGrid grid)
+        public override void Execute(TGrid grid)
         {
             this.Execute(grid.GetRandomCell());
         }
@@ -27,14 +31,14 @@ namespace Library.Algorithms.Generation
         /// Executes the Recursive Backtracker algorithm.
         /// </summary>
         /// <param name="startingCell">The starting cell.</param>
-        public void Execute(CartesianCell startingCell)
+        public void Execute(TCell startingCell)
         {
-            Stack<CartesianCell> stack = new();
+            Stack<TCell> stack = new();
             stack.Push(startingCell);
 
-            while (stack.TryPeek(out CartesianCell? current))
+            while (stack.TryPeek(out TCell? current))
             {
-                IEnumerable<CartesianCell> unvisitedNeighbors = current.Neighbors.Where(n => !n.HasLink);
+                IEnumerable<TCell> unvisitedNeighbors = current.Neighbors.Cast<TCell>().Where(n => !n.HasLink);
 
                 if (!unvisitedNeighbors.Any())
                 {
@@ -46,7 +50,7 @@ namespace Library.Algorithms.Generation
                 }
 
                 // Choose an unvisited neighbor.
-                CartesianCell neighbor = unvisitedNeighbors.GetRandomElement();
+                TCell neighbor = unvisitedNeighbors.GetRandomElement();
 
                 // Link it to the current cell.
                 current.Link(neighbor);

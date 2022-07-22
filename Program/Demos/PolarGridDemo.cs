@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Program.Demos
 {
+    using Library.Algorithms.Generation;
+    using Library.Cells;
     using Library.Grids;
 
     /// <summary>
@@ -17,8 +19,9 @@ namespace Program.Demos
         /// </summary>
         public static void Execute()
         {
-            PolarGrid grid = new(16);
-            grid.SaveImage("polar.png", 50);
+            PolarGrid grid = new(20);
+            new RecursiveBacktracker<PolarGrid, PolarCell>().Execute(grid);
+            grid.SaveImage("polar.png");
         }
     }
 }

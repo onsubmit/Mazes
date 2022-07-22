@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 namespace Library.Grids
 {
-    using System.Diagnostics.CodeAnalysis;
     using Library.Cells;
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.PixelFormats;
@@ -17,11 +16,6 @@ namespace Library.Grids
     public abstract class Grid<TCell>
         where TCell : Cell
     {
-        /// <summary>
-        /// Gets the size of the grid.
-        /// </summary>
-        public abstract int Size { get; }
-
         /// <summary>
         /// Performs the given action for each row of cells in the grid.
         /// </summary>
@@ -67,25 +61,15 @@ namespace Library.Grids
         public abstract TCell GetRandomCell();
 
         /// <summary>
-        /// Gets the cell's contents.
-        /// </summary>
-        /// <param name="cell">The cell.</param>
-        /// <returns>The cell's contents.</returns>
-        public abstract string GetCellContents(TCell cell);
-
-        /// <summary>
-        /// Gets the cell's background color.
-        /// </summary>
-        /// <param name="cell">The cell.</param>
-        /// <returns>The cell's background color.</returns>
-        public abstract Rgba32 GetCellBackgroundColor(TCell cell);
-
-        /// <summary>
         /// Saves an image of the grid.
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="cellSize">The size of each cell.</param>
-        public abstract void SaveImage(string filename, int cellSize = 10);
+        public void SaveImage(string filename, int cellSize = 10)
+        {
+            Image image = this.GetImage(cellSize);
+            image.Save(filename);
+        }
 
         /// <summary>
         /// Gets an image representation of the grid.
@@ -98,15 +82,6 @@ namespace Library.Grids
         /// Initializes the grid.
         /// </summary>
         protected abstract void Initialize();
-
-        /// <summary>
-        /// Tries to get the initial value for each element.
-        /// </summary>
-        /// <param name="row">The row.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="initialValue">The initial value.</param>
-        /// <returns><c>true</c> if the initial value was successfully determined, <c>false</c> otherwise.</returns>
-        protected abstract bool TryGetInitialElementValue(int row, int column, [NotNullWhen(returnValue: true)] out TCell? initialValue);
 
         /// <summary>
         /// Configures the cell neighbors.
