@@ -15,7 +15,7 @@ namespace Program
         /// </summary>
         public static void Main()
         {
-            Demos.ImageMaskDemo.Execute();
+            Demos.PolarGridDemo.Execute();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Program.Demos
         {
             PolarGrid grid = new(20);
             new RecursiveBacktracker<PolarGrid, PolarCell>().Execute(grid);
-            grid.SaveImage("polar.png");
+            grid.SaveImage("PolarGrid.png");
         }
     }
 }

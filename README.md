@@ -63,3 +63,15 @@
 ![Recursive Backtracker 4](images/RecursiveBacktracker3.png?raw=true "Recursive Backtracker 4")
 ![Recursive Backtracker 5](images/RecursiveBacktracker4.png?raw=true "Recursive Backtracker 5")
 ![Recursive Backtracker 6](images/RecursiveBacktracker5.png?raw=true "Recursive Backtracker 6")
+
+## Chapter 6
+
+### Image mask grid example
+
+![Image mask](images/ImageMask.png?raw=true "Image mask")
+
+## Chapter 7
+
+### Polar grid with Recursive Backtracker
+
+![PolarGrid](images/PolarGrid.png?raw=true "PolarGrid")
