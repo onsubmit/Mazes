@@ -39,6 +39,11 @@ namespace Library.Grids
         public int Rows => this.rows.Length;
 
         /// <summary>
+        /// Gets the collection of cells.
+        /// </summary>
+        public List<PolarCell>[] Values => this.rows;
+
+        /// <summary>
         /// Gets the <see cref="PolarCell"/> at the given coordinates or <c>null</c> if the coordinates are out of range.
         /// </summary>
         /// <param name="row">The desired cell row.</param>
@@ -72,7 +77,7 @@ namespace Library.Grids
         /// <returns>The cell's background color.</returns>
         public virtual Rgba32 GetCellBackgroundColor(PolarCell cell) => Rgba32.ParseHex("#ffffff");
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override Image GetImage(int cellSize = 10)
         {
             int center = this.Rows * cellSize;
@@ -80,7 +85,7 @@ namespace Library.Grids
 
             Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
             Rgba32 wallColor = Rgba32.ParseHex("#000000");
-            Pen linePen = new(wallColor, 1);
+            Pen linePen = new(wallColor, (int)Math.Ceiling(cellSize / 25.0));
 
             Image<Rgba32> image = new(size + 1, size + 1);
             image.Mutate(imageContext =>
@@ -92,45 +97,66 @@ namespace Library.Grids
                 EllipsePolygon circle = new(origin, radius);
                 imageContext.DrawPolygon(linePen, circle.Points.ToArray());
 
-                this.ForEachCell(cell =>
+                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
                 {
-                    if (cell.Row == 0)
+                    this.ForEachCell(cell =>
                     {
+                        if (cell.Row == 0)
+                        {
+                            return IteratorResult.Continue;
+                        }
+
+                        double theta = 2 * Math.PI / this.rows[cell.Row].Count;
+                        int innerRadius = cell.Row * cellSize;
+                        int outerRadius = innerRadius + cellSize;
+                        double thetaCounterClockwise = cell.Column * theta;
+                        double thetaClockwise = thetaCounterClockwise + theta;
+
+                        double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
+                        double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
+                        double cosThetaClockwise = Math.Cos(thetaClockwise);
+                        double sinThetaClockwise = Math.Sin(thetaClockwise);
+
+                        int x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
+                        int y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
+                        int x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
+                        int y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
+                        int x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
+                        int y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
+                        int x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
+                        int y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
+
+                        switch (mode)
+                        {
+                            case ImageGenerationMode.Backgrounds:
+                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+
+                                // TODO: this isn't exactly right. Need to add another line to the polygon when the outward cell is subdivided.
+                                Polygon polygon = new(
+                                    new LinearLineSegment(new PointF[] { new(x1, y1), new(x3, y3) }),
+                                    new LinearLineSegment(new PointF[] { new(x2, y2), new(x3, y3) }),
+                                    new LinearLineSegment(new PointF[] { new(x3, y3), new(x4, y4) }),
+                                    new LinearLineSegment(new PointF[] { new(x4, y4), new(x2, y2) }));
+                                imageContext.Fill(cellBackgroundColor, polygon);
+                                break;
+
+                            case ImageGenerationMode.Walls:
+                                if (!cell.IsLinkedTo(cell.Inward))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x3, y3) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.Clockwise))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(x3, y3), new(x4, y4) });
+                                }
+
+                                break;
+                        }
+
                         return IteratorResult.Continue;
-                    }
-
-                    double theta = 2 * Math.PI / this.rows[cell.Row].Count;
-                    int innerRadius = cell.Row * cellSize;
-                    int outerRadius = innerRadius + cellSize;
-                    double thetaCounterClockwise = cell.Column * theta;
-                    double thetaClockwise = thetaCounterClockwise + theta;
-
-                    double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
-                    double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
-                    double cosThetaClockwise = Math.Cos(thetaClockwise);
-                    double sinThetaClockwise = Math.Sin(thetaClockwise);
-
-                    int x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
-                    int y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
-                    int x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
-                    int y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
-                    int x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
-                    int y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
-                    int x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
-                    int y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
-
-                    if (!cell.IsLinkedTo(cell.Inward))
-                    {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x3, y3) });
-                    }
-
-                    if (!cell.IsLinkedTo(cell.Clockwise))
-                    {
-                        imageContext.DrawLines(linePen, new PointF[] { new(x3, y3), new(x4, y4) });
-                    }
-
-                    return IteratorResult.Continue;
-                });
+                    });
+                }
             });
 
             return image;
