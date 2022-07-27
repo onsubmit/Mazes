@@ -9,9 +9,9 @@ namespace Library.Grids
     using SixLabors.ImageSharp.PixelFormats;
 
     /// <summary>
-    /// Version of <see cref="DistanceGrid"/> but distances are portrayed via color.
+    /// Version of <see cref="CartesianGrid"/> but distances are portrayed via color.
     /// </summary>
-    public class ColoredGrid : DistanceGrid
+    public class ColoredGrid : CartesianDistanceGrid
     {
         private int maximum;
 
@@ -43,7 +43,7 @@ namespace Library.Grids
         /// <summary>
         /// Gets or sets the distances.
         /// </summary>
-        public override Distances<Cell>? Distances
+        public override Distances<CartesianCell>? Distances
         {
             get => base.Distances;
             set

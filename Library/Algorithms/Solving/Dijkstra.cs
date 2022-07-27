@@ -19,9 +19,9 @@ namespace Library.Algorithms.Solving
         /// <param name="grid">The maze grid.</param>
         /// <param name="start">The starting cell.</param>
         /// <param name="end">The ending cell.</param>
-        public static void Solve(DistanceGrid grid, Cell start, Cell end)
+        public static void Solve(CartesianDistanceGrid grid, CartesianCell start, CartesianCell end)
         {
-            grid.Distances = start.GetDistances();
+            grid.Distances = start.GetDistances<CartesianCell>();
             Console.WriteLine(grid);
 
             grid.Distances = grid.Distances.GetShortestPathTo(end);

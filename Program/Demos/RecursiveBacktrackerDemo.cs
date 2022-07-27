@@ -23,7 +23,7 @@ namespace Program.Demos
             {
                 ColoredGrid grid = new(20);
                 new RecursiveBacktracker<ColoredGrid, CartesianCell>().Execute(grid);
-                grid.Distances = grid.GetDistancesFromCell(grid.Rows / 2, grid.Columns / 2);
+                grid.Distances = grid.GetDistancesFromCell(grid.Values[grid.Rows / 2, grid.Columns / 2]);
                 grid.SaveImage($"RecursiveBacktracker{i}.png", 20);
             }
         }

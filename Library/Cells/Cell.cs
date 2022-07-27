@@ -69,19 +69,26 @@ namespace Library.Cells
         /// <summary>
         /// Gets the distances between this cell and all the other cells.
         /// </summary>
+        /// <typeparam name="TCell">The type of cell.</typeparam>
         /// <returns>The distances between this cell and all the other cells.</returns>
-        public Distances<Cell> GetDistances()
+        public Distances<TCell> GetDistances<TCell>()
+            where TCell : Cell
         {
-            Distances<Cell> distances = new(this);
-            List<Cell> frontier = new() { this };
+            if (this is not TCell thisCell)
+            {
+                throw new InvalidOperationException($"This cell is not of type {typeof(TCell)}. Found: {this.GetType()}");
+            }
+
+            Distances<TCell> distances = new(thisCell);
+            List<TCell> frontier = new() { thisCell };
 
             while (frontier.Any())
             {
-                List<Cell> newFrontier = new();
+                List<TCell> newFrontier = new();
 
-                foreach (Cell cell in frontier)
+                foreach (TCell cell in frontier)
                 {
-                    foreach (Cell linked in cell.Links)
+                    foreach (TCell linked in cell.Links)
                     {
                         if (distances.HasCell(linked))
                         {

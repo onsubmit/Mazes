@@ -26,7 +26,7 @@ namespace Program.Demos
             new RecursiveBacktracker<MaskedGrid, CartesianCell>().Execute(grid);
 
             Cell startingCell = grid.GetRandomCell();
-            grid.Distances = startingCell.GetDistances();
+            grid.Distances = startingCell.GetDistances<CartesianCell>();
 
             grid.SaveImage($"ImageMask.png", 5);
         }
