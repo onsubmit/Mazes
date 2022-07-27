@@ -7,6 +7,7 @@ namespace Library.Grids
 {
     using Library.Cells;
     using Library.Extensions;
+    using SixLabors.Fonts;
     using SixLabors.ImageSharp;
     using SixLabors.ImageSharp.Drawing;
     using SixLabors.ImageSharp.Drawing.Processing;
@@ -80,64 +81,119 @@ namespace Library.Grids
         /// <inheritdoc />
         public override Image GetImage(int cellSize = 10)
         {
+            Dictionary<PolarCell, int[]> cellCorners = new();
+
             int center = this.Rows * cellSize;
             int size = 2 * center;
 
             Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
             Rgba32 wallColor = Rgba32.ParseHex("#000000");
-            Pen linePen = new(wallColor, (int)Math.Ceiling(cellSize / 25.0));
+            float lineWidth = cellSize / 25.0f;
+            Pen linePen = new(wallColor, lineWidth);
+            Font font = new(SystemFonts.Get("Arial"), cellSize / 4, FontStyle.Regular);
 
-            Image<Rgba32> image = new(size + 1, size + 1);
+            Image<Rgba32> image = new(size + (int)Math.Ceiling(lineWidth), size + (int)Math.Ceiling(lineWidth));
             image.Mutate(imageContext =>
             {
                 imageContext.BackgroundColor(backgroundColor);
 
-                PointF origin = new(center, center);
-                int radius = center;
-                EllipsePolygon circle = new(origin, radius);
-                imageContext.DrawPolygon(linePen, circle.Points.ToArray());
-
-                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
+                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.PreCalculate, ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls, ImageGenerationMode.Text })
                 {
                     this.ForEachCell(cell =>
                     {
                         if (cell.Row == 0)
                         {
+                            if (mode == ImageGenerationMode.Backgrounds)
+                            {
+                                PointF[] originBorder = cell.Outward.Select(outward =>
+                                {
+                                    int[] outwardCorners = cellCorners[outward];
+                                    return new PointF(outwardCorners[0], outwardCorners[1]);
+                                }).ToArray();
+
+                                List<LinearLineSegment> originSegments = new();
+                                for (int i = 0; i < originBorder.Length - 1; i++)
+                                {
+                                    originSegments.Add(new LinearLineSegment(originBorder[i], originBorder[i + 1]));
+                                }
+
+                                Polygon originPolygon = new(originSegments);
+                                imageContext.Fill(this.GetCellBackgroundColor(cell), originPolygon);
+                            }
+
                             return IteratorResult.Continue;
                         }
 
-                        double theta = 2 * Math.PI / this.rows[cell.Row].Count;
-                        int innerRadius = cell.Row * cellSize;
-                        int outerRadius = innerRadius + cellSize;
-                        double thetaCounterClockwise = cell.Column * theta;
-                        double thetaClockwise = thetaCounterClockwise + theta;
-
-                        double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
-                        double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
-                        double cosThetaClockwise = Math.Cos(thetaClockwise);
-                        double sinThetaClockwise = Math.Sin(thetaClockwise);
-
-                        int x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
-                        int y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
-                        int x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
-                        int y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
-                        int x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
-                        int y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
-                        int x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
-                        int y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
+                        int x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
+                        if (cellCorners.TryGetValue(cell, out int[]? corners))
+                        {
+                            x1 = corners[0];
+                            y1 = corners[1];
+                            x2 = corners[2];
+                            y2 = corners[3];
+                            x3 = corners[4];
+                            y3 = corners[5];
+                            x4 = corners[6];
+                            y4 = corners[7];
+                        }
+                        else if (mode != ImageGenerationMode.PreCalculate)
+                        {
+                            throw new InvalidOperationException("Cell corners not precalculated.");
+                        }
 
                         switch (mode)
                         {
+                            case ImageGenerationMode.PreCalculate:
+                                double theta = 2 * Math.PI / this.rows[cell.Row].Count;
+                                int innerRadius = cell.Row * cellSize;
+                                int outerRadius = innerRadius + cellSize;
+                                double thetaCounterClockwise = cell.Column * theta;
+                                double thetaClockwise = thetaCounterClockwise + theta;
+
+                                double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
+                                double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
+                                double cosThetaClockwise = Math.Cos(thetaClockwise);
+                                double sinThetaClockwise = Math.Sin(thetaClockwise);
+
+                                x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
+                                y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
+                                x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
+                                y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
+                                x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
+                                y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
+                                x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
+                                y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
+
+                                corners = new[] { x1, y1, x2, y2, x3, y3, x4, y4 };
+                                cellCorners.Add(cell, corners);
+
+                                break;
                             case ImageGenerationMode.Backgrounds:
                                 Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+                                Pen backgroundPen = new(cellBackgroundColor, 3);
 
-                                // TODO: this isn't exactly right. Need to add another line to the polygon when the outward cell is subdivided.
-                                Polygon polygon = new(
+                                List<LinearLineSegment> segments = new()
+                                {
                                     new LinearLineSegment(new PointF[] { new(x1, y1), new(x3, y3) }),
                                     new LinearLineSegment(new PointF[] { new(x2, y2), new(x3, y3) }),
                                     new LinearLineSegment(new PointF[] { new(x3, y3), new(x4, y4) }),
-                                    new LinearLineSegment(new PointF[] { new(x4, y4), new(x2, y2) }));
+                                };
+
+                                if (cell.Outward.Count > 1)
+                                {
+                                    int[] outwardCorners = cellCorners[cell.Outward[1]];
+                                    segments.Add(new LinearLineSegment(new PointF[] { new(x4, y4), new(outwardCorners[0], outwardCorners[1]) }));
+                                    segments.Add(new LinearLineSegment(new PointF[] { new(outwardCorners[0], outwardCorners[1]), new(x2, y2) }));
+                                }
+                                else
+                                {
+                                    segments.Add(new LinearLineSegment(new PointF[] { new(x4, y4), new(x2, y2) }));
+                                }
+
+                                Polygon polygon = new(segments);
+                                segments.ForEach(segment => imageContext.DrawLines(backgroundPen, segment.Flatten().ToArray()));
                                 imageContext.Fill(cellBackgroundColor, polygon);
+
                                 break;
 
                             case ImageGenerationMode.Walls:
@@ -152,11 +208,21 @@ namespace Library.Grids
                                 }
 
                                 break;
+
+                            case ImageGenerationMode.Text:
+                                PointF point = new(((x1 + x4) / 2f) - (font.Size / 2f), ((y1 + y4) / 2f) - (font.Size / 2f));
+                                imageContext.DrawText(this.GetCellContents(cell), font, Color.Black, point);
+                                break;
                         }
 
                         return IteratorResult.Continue;
                     });
                 }
+
+                PointF origin = new(center, center);
+                int radius = center;
+                EllipsePolygon circle = new(origin, radius);
+                imageContext.DrawPolygon(linePen, circle.Points.ToArray());
             });
 
             return image;

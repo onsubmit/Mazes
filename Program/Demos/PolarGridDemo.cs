@@ -19,13 +19,11 @@ namespace Program.Demos
         /// </summary>
         public static void Execute()
         {
-            PolarColoredGrid grid = new(20);
+            PolarColoredGrid grid = new(10);
             new RecursiveBacktracker<PolarGrid, PolarCell>().Execute(grid);
 
-            int row = grid.Rows / 2;
-            int column = grid.Values[row].Count / 2;
-            grid.Distances = grid.GetDistancesFromCell(grid.Values[row][column]);
-            grid.SaveImage("PolarGrid.png", 100);
+            grid.Distances = grid.GetDistancesFromCell(grid.Values[0][0]);
+            grid.SaveImage("PolarGrid.png", 40);
         }
     }
 }

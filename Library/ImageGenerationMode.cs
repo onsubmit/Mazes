@@ -11,6 +11,11 @@ namespace Library
     public enum ImageGenerationMode
     {
         /// <summary>
+        /// Pre-calculate things.
+        /// </summary>
+        PreCalculate,
+
+        /// <summary>
         /// Draw the cell background.
         /// </summary>
         Backgrounds,
@@ -19,5 +24,10 @@ namespace Library
         /// Draw the cell walls.
         /// </summary>
         Walls,
+
+        /// <summary>
+        /// Draw some text on a cell.
+        /// </summary>
+        Text,
     }
 }

@@ -49,21 +49,7 @@ namespace Library.Grids
             }
 
             int distance = this.Distances[cell];
-
-            if (distance < 10)
-            {
-                return distance.ToString();
-            }
-
-            if (distance >= 36)
-            {
-                return "?";
-            }
-
-            // 10 + 87 = 97 == 'a'
-            // 35 + 87 = 122 == 'z'
-            const int AsciiW = 87;
-            return Convert.ToChar(distance + AsciiW).ToString();
+            return distance.ToString();
         }
     }
 }
