@@ -16,7 +16,7 @@ namespace Library.Grids
     /// <summary>
     /// Represents a polar grid, allowing the creation of circular mazes.
     /// </summary>
-    public sealed class PolarGrid : Grid<PolarCell>
+    public class PolarGrid : Grid<PolarCell>
     {
         /// <summary>
         /// The collection of <see cref="CartesianCell"/> objects.
@@ -57,6 +57,20 @@ namespace Library.Grids
                 return this.rows[row][column.Modulo(this.rows[row].Count)];
             }
         }
+
+        /// <summary>
+        /// Gets the cell's contents.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's contents.</returns>
+        public virtual string GetCellContents(PolarCell cell) => " ";
+
+        /// <summary>
+        /// Gets the cell's background color.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's background color.</returns>
+        public virtual Rgba32 GetCellBackgroundColor(PolarCell cell) => Rgba32.ParseHex("#ffffff");
 
         /// <inheritdoc/>
         public override Image GetImage(int cellSize = 10)
