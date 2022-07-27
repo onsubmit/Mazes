@@ -21,9 +21,9 @@ namespace Program.Demos
         public static void Execute()
         {
             ImageMask mask = ImageMask.FromFile("mandelbrot.png");
-            MaskedGrid grid = new(mask);
+            CartesianMaskedGrid grid = new(mask);
 
-            new RecursiveBacktracker<MaskedGrid, CartesianCell>().Execute(grid);
+            new RecursiveBacktracker<CartesianMaskedGrid, CartesianCell>().Execute(grid);
 
             Cell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances<CartesianCell>();

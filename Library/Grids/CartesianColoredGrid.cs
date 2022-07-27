@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ColoredGrid.cs" company="Andy Young">
+// <copyright file="CartesianColoredGrid.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,30 +9,30 @@ namespace Library.Grids
     using SixLabors.ImageSharp.PixelFormats;
 
     /// <summary>
-    /// Version of <see cref="CartesianGrid"/> but distances are portrayed via color.
+    /// Version of <see cref="CartesianDistanceGrid"/> but distances are portrayed via color.
     /// </summary>
-    public class ColoredGrid : CartesianDistanceGrid
+    public class CartesianColoredGrid : CartesianDistanceGrid
     {
         private int maximum;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ColoredGrid"/> class.
+        /// Initializes a new instance of the <see cref="CartesianColoredGrid"/> class.
         /// </summary>
         /// <param name="size">The number of rows and columns in the grid.</param>
-        public ColoredGrid(int size)
+        public CartesianColoredGrid(int size)
             : this(size, size)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ColoredGrid"/> class.
+        /// Initializes a new instance of the <see cref="CartesianColoredGrid"/> class.
         /// </summary>
         /// <param name="rows">The number of rows in the grid.</param>
         /// <param name="columns">The number of columns in the grid.</param>
-        public ColoredGrid(int rows, int columns)
+        public CartesianColoredGrid(int rows, int columns)
             : base(rows, columns)
         {
-            if (!this.GetType().IsSubclassOf(typeof(ColoredGrid)))
+            if (!this.GetType().IsSubclassOf(typeof(CartesianColoredGrid)))
             {
                 // Derived classes are responsible for calling the Initialize method themselves from their own constructors.
                 // This is a code smell... fix this, doofus.

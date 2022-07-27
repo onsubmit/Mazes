@@ -21,9 +21,9 @@ namespace Program.Demos
         public static void Execute()
         {
             AsciiMask mask = AsciiMask.FromFile("mask.txt");
-            MaskedGrid grid = new(mask);
+            CartesianMaskedGrid grid = new(mask);
 
-            new RecursiveBacktracker<MaskedGrid, CartesianCell>().Execute(grid);
+            new RecursiveBacktracker<CartesianMaskedGrid, CartesianCell>().Execute(grid);
 
             CartesianCell startingCell = grid.GetRandomCell();
             grid.Distances = startingCell.GetDistances<CartesianCell>();

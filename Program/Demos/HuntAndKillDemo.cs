@@ -20,7 +20,7 @@ namespace Program.Demos
         {
             for (int i = 0; i < 6; i++)
             {
-                ColoredGrid grid = new(20);
+                CartesianColoredGrid grid = new(20);
                 new HuntAndKill().Execute(grid);
                 grid.Distances = grid.GetDistancesFromCell(grid.Values[grid.Rows / 2, grid.Columns / 2]);
                 grid.SaveImage($"HuntAndKill{i}.png", 20);

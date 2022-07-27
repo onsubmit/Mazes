@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="MaskedGrid.cs" company="Andy Young">
+// <copyright file="CartesianMaskedGrid.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,15 +12,15 @@ namespace Library.Grids
     /// <summary>
     /// Represents a maze grid, effectively a collection of <see cref="Cell"/> objects.
     /// </summary>
-    public sealed class MaskedGrid : ColoredGrid
+    public sealed class CartesianMaskedGrid : CartesianColoredGrid
     {
         private readonly Mask mask;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MaskedGrid"/> class.
+        /// Initializes a new instance of the <see cref="CartesianMaskedGrid"/> class.
         /// </summary>
         /// <param name="mask">The grid mask.</param>
-        public MaskedGrid(Mask mask)
+        public CartesianMaskedGrid(Mask mask)
             : base(mask.Rows, mask.Columns)
         {
             this.mask = mask;
