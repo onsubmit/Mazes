@@ -70,9 +70,9 @@ namespace Library.Cells
         /// Gets the distances between this cell and all the other cells.
         /// </summary>
         /// <returns>The distances between this cell and all the other cells.</returns>
-        public Distances GetDistances()
+        public Distances<Cell> GetDistances()
         {
-            Distances distances = new(this);
+            Distances<Cell> distances = new(this);
             List<Cell> frontier = new() { this };
 
             while (frontier.Any())

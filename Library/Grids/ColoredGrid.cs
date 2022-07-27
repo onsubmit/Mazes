@@ -43,7 +43,7 @@ namespace Library.Grids
         /// <summary>
         /// Gets or sets the distances.
         /// </summary>
-        public override Distances? Distances
+        public override Distances<Cell>? Distances
         {
             get => base.Distances;
             set

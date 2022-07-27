@@ -10,16 +10,18 @@ namespace Library
     /// <summary>
     /// Used to record the distance of each cell from the start point.
     /// </summary>
-    public class Distances
+    /// <typeparam name="TCell">The type of cells in the grid.</typeparam>
+    public class Distances<TCell>
+        where TCell : Cell
     {
-        private readonly Cell root;
-        private readonly Dictionary<Cell, int> cells = new();
+        private readonly TCell root;
+        private readonly Dictionary<TCell, int> cells = new();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Distances"/> class.
+        /// Initializes a new instance of the <see cref="Distances{TCell}"/> class.
         /// </summary>
         /// <param name="root">The root cell used to record the distance of each cell from it.</param>
-        public Distances(Cell root)
+        public Distances(TCell root)
         {
             this.root = root;
             this.cells[root] = 0;
@@ -34,7 +36,7 @@ namespace Library
         /// Gets or sets the distance between the root and the given cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        public int this[Cell cell]
+        public int this[TCell cell]
         {
             get
             {
@@ -52,23 +54,23 @@ namespace Library
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <returns><c>true</c> if the distance between the cell and the root is known, <c>false</c> otherwise.</returns>
-        public bool HasCell(Cell cell) => this.cells.ContainsKey(cell);
+        public bool HasCell(TCell cell) => this.cells.ContainsKey(cell);
 
         /// <summary>
         /// Determines the shortest path from the original starting point to the provided goal cell.
         /// </summary>
         /// <param name="goal">The goal cell.</param>
         /// <returns>The distances from the starting point to the goal cell.</returns>
-        public Distances GetShortestPathTo(Cell goal)
+        public Distances<TCell> GetShortestPathTo(TCell goal)
         {
-            Cell current = goal;
+            TCell current = goal;
 
-            Distances breadcrumbs = new(this.root);
+            Distances<TCell> breadcrumbs = new(this.root);
             breadcrumbs[current] = this.cells[current];
 
             while (current != this.root)
             {
-                foreach (Cell neighbor in current.Links)
+                foreach (TCell neighbor in current.Links)
                 {
                     if (this.cells[neighbor] < this.cells[current])
                     {
@@ -87,14 +89,14 @@ namespace Library
         /// </summary>
         /// <param name="distance">The distance the cell is from the root.</param>
         /// <returns>The cell furthest from the root.</returns>
-        public Cell GetCellFurthestFromRoot(out int distance)
+        public TCell GetCellFurthestFromRoot(out int distance)
         {
             distance = 0;
 
             int maxDistance = 0;
-            Cell maxCell = this.root;
+            TCell maxCell = this.root;
 
-            foreach ((Cell cell, int distanceToCell) in this.cells)
+            foreach ((TCell cell, int distanceToCell) in this.cells)
             {
                 if (distanceToCell > maxDistance)
                 {

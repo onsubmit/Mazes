@@ -40,7 +40,7 @@ namespace Library.Grids
         /// <summary>
         /// Gets or sets the distances.
         /// </summary>
-        public virtual Distances? Distances { get; set; }
+        public virtual Distances<Cell>? Distances { get; set; }
 
         /// <summary>
         /// Sets the distances from the cell at the given coordinates.
@@ -48,7 +48,7 @@ namespace Library.Grids
         /// <param name="row">The cell row.</param>
         /// <param name="column">The cell column.</param>
         /// <returns>The distances from the cell at the given coordinates.</returns>
-        public Distances GetDistancesFromCell(int row, int column)
+        public Distances<Cell> GetDistancesFromCell(int row, int column)
         {
             Cell? cell = this[row, column];
             if (cell == null)
