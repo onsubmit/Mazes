@@ -98,18 +98,17 @@ namespace Library.Grids
             {
                 imageContext.BackgroundColor(backgroundColor);
 
+                // Draw origin background.
+                PolarCell originCell = this.Values[0][0];
+                EllipsePolygon originBackgroundCircle = new(origin, cellSize);
+                imageContext.Fill(this.GetCellBackgroundColor(originCell), originBackgroundCircle);
+
                 foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.PreCalculate, ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls, ImageGenerationMode.Text })
                 {
                     this.ForEachCell(cell =>
                     {
                         if (cell.Row == 0)
                         {
-                            if (mode == ImageGenerationMode.Backgrounds)
-                            {
-                                EllipsePolygon originBackgroundCircle = new(origin, cellSize);
-                                imageContext.Fill(this.GetCellBackgroundColor(cell), originBackgroundCircle);
-                            }
-
                             return IteratorResult.Continue;
                         }
 
