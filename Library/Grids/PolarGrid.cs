@@ -93,7 +93,7 @@ namespace Library.Grids
             Pen linePen = new(wallColor, lineWidth);
             Font font = new(SystemFonts.Get("Arial"), cellSize / 4, FontStyle.Regular);
 
-            Image<Rgba32> image = new(size + (int)Math.Ceiling(lineWidth), size + (int)Math.Ceiling(lineWidth));
+            Image<Rgba32> image = new(size, size);
             image.Mutate(imageContext =>
             {
                 imageContext.BackgroundColor(backgroundColor);
