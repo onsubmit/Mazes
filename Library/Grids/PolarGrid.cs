@@ -81,7 +81,7 @@ namespace Library.Grids
         /// <inheritdoc />
         public override Image GetImage(int cellSize = 10)
         {
-            Dictionary<PolarCell, int[]> cellCorners = new();
+            Dictionary<PolarCell, Point[]> cellCorners = new();
 
             int center = this.Rows * cellSize;
             PointF origin = new(center, center);
@@ -112,17 +112,13 @@ namespace Library.Grids
                             return IteratorResult.Continue;
                         }
 
-                        int x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
-                        if (cellCorners.TryGetValue(cell, out int[]? corners))
+                        Point p1 = default, p2 = default, p3 = default, p4 = default;
+                        if (cellCorners.TryGetValue(cell, out Point[]? corners))
                         {
-                            x1 = corners[0];
-                            y1 = corners[1];
-                            x2 = corners[2];
-                            y2 = corners[3];
-                            x3 = corners[4];
-                            y3 = corners[5];
-                            x4 = corners[6];
-                            y4 = corners[7];
+                            p1 = corners[0];
+                            p2 = corners[1];
+                            p3 = corners[2];
+                            p4 = corners[3];
                         }
                         else if (mode != ImageGenerationMode.PreCalculate)
                         {
@@ -144,16 +140,12 @@ namespace Library.Grids
                                 double cosThetaClockwise = Math.Cos(thetaClockwise);
                                 double sinThetaClockwise = Math.Sin(thetaClockwise);
 
-                                x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
-                                y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
-                                x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
-                                y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
-                                x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
-                                y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
-                                x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
-                                y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
+                                p1 = new((int)Math.Round(center + (innerRadius * cosThetaCounterClockwise)), (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise)));
+                                p2 = new((int)Math.Round(center + (outerRadius * cosThetaCounterClockwise)), (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise)));
+                                p3 = new((int)Math.Round(center + (innerRadius * cosThetaClockwise)), (int)Math.Round(center + (innerRadius * sinThetaClockwise)));
+                                p4 = new((int)Math.Round(center + (outerRadius * cosThetaClockwise)), (int)Math.Round(center + (outerRadius * sinThetaClockwise)));
 
-                                corners = new[] { x1, y1, x2, y2, x3, y3, x4, y4 };
+                                corners = new Point[] { p1, p2, p3, p4 };
                                 cellCorners.Add(cell, corners);
 
                                 break;
@@ -166,10 +158,10 @@ namespace Library.Grids
 
                                 List<ILineSegment> segments = new()
                                 {
-                                    new ArcLineSegment(new(x1, y1), new(x3, y3), new SizeF(innerRadius, innerRadius), 0, false, true),
-                                    new LinearLineSegment(new PointF[] { new(x2, y2), new(x3, y3) }),
-                                    new LinearLineSegment(new PointF[] { new(x3, y3), new(x4, y4) }),
-                                    new ArcLineSegment(new(x4, y4), new(x2, y2), new SizeF(outerRadius, outerRadius), 0, false, false),
+                                    new ArcLineSegment(p1, p3, new SizeF(innerRadius, innerRadius), 0, false, true),
+                                    new LinearLineSegment(p2, p3),
+                                    new LinearLineSegment(p3, p4),
+                                    new ArcLineSegment(p4, p2, new SizeF(outerRadius, outerRadius), 0, false, false),
                                 };
 
                                 Polygon polygon = new(segments);
@@ -182,19 +174,19 @@ namespace Library.Grids
                                 if (!cell.IsLinkedTo(cell.Inward))
                                 {
                                     innerRadius = cell.Row * cellSize;
-                                    ArcLineSegment curvedWall = new(new(x1, y1), new(x3, y3), new SizeF(innerRadius, innerRadius), 0, false, true);
+                                    ArcLineSegment curvedWall = new(p1, p3, new SizeF(innerRadius, innerRadius), 0, false, true);
                                     imageContext.DrawLines(linePen, curvedWall.Flatten().ToArray());
                                 }
 
                                 if (!cell.IsLinkedTo(cell.Clockwise))
                                 {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x3, y3), new(x4, y4) });
+                                    imageContext.DrawLines(linePen, p3, p4);
                                 }
 
                                 break;
 
                             case ImageGenerationMode.Text:
-                                PointF point = new(((x1 + x4) / 2f) - (font.Size / 2f), ((y1 + y4) / 2f) - (font.Size / 2f));
+                                PointF point = new(((p1.X + p4.X) / 2f) - (font.Size / 2f), ((p1.Y + p4.Y) / 2f) - (font.Size / 2f));
                                 imageContext.DrawText(this.GetCellContents(cell), font, Color.Black, point);
                                 break;
                         }
