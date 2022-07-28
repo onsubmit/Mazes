@@ -84,6 +84,7 @@ namespace Library.Grids
             Dictionary<PolarCell, int[]> cellCorners = new();
 
             int center = this.Rows * cellSize;
+            PointF origin = new(center, center);
             int size = 2 * center;
 
             Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
@@ -101,128 +102,110 @@ namespace Library.Grids
                 {
                     this.ForEachCell(cell =>
                     {
-                        if (cell.Row == 0)
-                        {
-                            if (mode == ImageGenerationMode.Backgrounds)
-                            {
-                                PointF[] originBorder = cell.Outward.Select(outward =>
-                                {
-                                    int[] outwardCorners = cellCorners[outward];
-                                    return new PointF(outwardCorners[0], outwardCorners[1]);
-                                }).ToArray();
+                          if (cell.Row == 0)
+                          {
+                              if (mode == ImageGenerationMode.Backgrounds)
+                              {
+                                  EllipsePolygon originBackgroundCircle = new(origin, cellSize);
+                                  imageContext.Fill(this.GetCellBackgroundColor(cell), originBackgroundCircle);
+                              }
 
-                                List<LinearLineSegment> originSegments = new();
-                                for (int i = 0; i < originBorder.Length - 1; i++)
-                                {
-                                    originSegments.Add(new LinearLineSegment(originBorder[i], originBorder[i + 1]));
-                                }
+                              return IteratorResult.Continue;
+                          }
 
-                                Polygon originPolygon = new(originSegments);
-                                imageContext.Fill(this.GetCellBackgroundColor(cell), originPolygon);
-                            }
+                          int x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
+                          if (cellCorners.TryGetValue(cell, out int[]? corners))
+                          {
+                              x1 = corners[0];
+                              y1 = corners[1];
+                              x2 = corners[2];
+                              y2 = corners[3];
+                              x3 = corners[4];
+                              y3 = corners[5];
+                              x4 = corners[6];
+                              y4 = corners[7];
+                          }
+                          else if (mode != ImageGenerationMode.PreCalculate)
+                          {
+                              throw new InvalidOperationException("Cell corners not precalculated.");
+                          }
 
-                            return IteratorResult.Continue;
-                        }
+                          int innerRadius, outerRadius;
+                          switch (mode)
+                          {
+                              case ImageGenerationMode.PreCalculate:
+                                  double theta = 2 * Math.PI / this.rows[cell.Row].Count;
+                                  innerRadius = cell.Row * cellSize;
+                                  outerRadius = innerRadius + cellSize;
+                                  double thetaCounterClockwise = cell.Column * theta;
+                                  double thetaClockwise = thetaCounterClockwise + theta;
 
-                        int x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
-                        if (cellCorners.TryGetValue(cell, out int[]? corners))
-                        {
-                            x1 = corners[0];
-                            y1 = corners[1];
-                            x2 = corners[2];
-                            y2 = corners[3];
-                            x3 = corners[4];
-                            y3 = corners[5];
-                            x4 = corners[6];
-                            y4 = corners[7];
-                        }
-                        else if (mode != ImageGenerationMode.PreCalculate)
-                        {
-                            throw new InvalidOperationException("Cell corners not precalculated.");
-                        }
+                                  double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
+                                  double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
+                                  double cosThetaClockwise = Math.Cos(thetaClockwise);
+                                  double sinThetaClockwise = Math.Sin(thetaClockwise);
 
-                        switch (mode)
-                        {
-                            case ImageGenerationMode.PreCalculate:
-                                double theta = 2 * Math.PI / this.rows[cell.Row].Count;
-                                int innerRadius = cell.Row * cellSize;
-                                int outerRadius = innerRadius + cellSize;
-                                double thetaCounterClockwise = cell.Column * theta;
-                                double thetaClockwise = thetaCounterClockwise + theta;
+                                  x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
+                                  y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
+                                  x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
+                                  y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
+                                  x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
+                                  y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
+                                  x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
+                                  y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
 
-                                double cosThetaCounterClockwise = Math.Cos(thetaCounterClockwise);
-                                double sinThetaCounterClockwise = Math.Sin(thetaCounterClockwise);
-                                double cosThetaClockwise = Math.Cos(thetaClockwise);
-                                double sinThetaClockwise = Math.Sin(thetaClockwise);
+                                  corners = new[] { x1, y1, x2, y2, x3, y3, x4, y4 };
+                                  cellCorners.Add(cell, corners);
 
-                                x1 = (int)Math.Round(center + (innerRadius * cosThetaCounterClockwise));
-                                y1 = (int)Math.Round(center + (innerRadius * sinThetaCounterClockwise));
-                                x2 = (int)Math.Round(center + (outerRadius * cosThetaCounterClockwise));
-                                y2 = (int)Math.Round(center + (outerRadius * sinThetaCounterClockwise));
-                                x3 = (int)Math.Round(center + (innerRadius * cosThetaClockwise));
-                                y3 = (int)Math.Round(center + (innerRadius * sinThetaClockwise));
-                                x4 = (int)Math.Round(center + (outerRadius * cosThetaClockwise));
-                                y4 = (int)Math.Round(center + (outerRadius * sinThetaClockwise));
+                                  break;
+                              case ImageGenerationMode.Backgrounds:
+                                  innerRadius = cell.Row * cellSize;
+                                  outerRadius = innerRadius + cellSize;
 
-                                corners = new[] { x1, y1, x2, y2, x3, y3, x4, y4 };
-                                cellCorners.Add(cell, corners);
+                                  Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+                                  Pen backgroundPen = new(cellBackgroundColor, 3);
 
-                                break;
-                            case ImageGenerationMode.Backgrounds:
-                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
-                                Pen backgroundPen = new(cellBackgroundColor, 3);
+                                  List<ILineSegment> segments = new()
+                                  {
+                                      new ArcLineSegment(new(x1, y1), new(x3, y3), new SizeF(innerRadius, innerRadius), 0, false, true),
+                                      new LinearLineSegment(new PointF[] { new(x2, y2), new(x3, y3) }),
+                                      new LinearLineSegment(new PointF[] { new(x3, y3), new(x4, y4) }),
+                                      new ArcLineSegment(new(x4, y4), new(x2, y2), new SizeF(outerRadius, outerRadius), 0, false, false),
+                                  };
 
-                                List<LinearLineSegment> segments = new()
-                                {
-                                    new LinearLineSegment(new PointF[] { new(x1, y1), new(x3, y3) }),
-                                    new LinearLineSegment(new PointF[] { new(x2, y2), new(x3, y3) }),
-                                    new LinearLineSegment(new PointF[] { new(x3, y3), new(x4, y4) }),
-                                };
+                                  Polygon polygon = new(segments);
+                                  segments.ForEach(segment => imageContext.DrawLines(backgroundPen, segment.Flatten().ToArray()));
+                                  imageContext.Fill(cellBackgroundColor, polygon);
 
-                                if (cell.Outward.Count > 1)
-                                {
-                                    int[] outwardCorners = cellCorners[cell.Outward[1]];
-                                    segments.Add(new LinearLineSegment(new PointF[] { new(x4, y4), new(outwardCorners[0], outwardCorners[1]) }));
-                                    segments.Add(new LinearLineSegment(new PointF[] { new(outwardCorners[0], outwardCorners[1]), new(x2, y2) }));
-                                }
-                                else
-                                {
-                                    segments.Add(new LinearLineSegment(new PointF[] { new(x4, y4), new(x2, y2) }));
-                                }
+                                  break;
 
-                                Polygon polygon = new(segments);
-                                segments.ForEach(segment => imageContext.DrawLines(backgroundPen, segment.Flatten().ToArray()));
-                                imageContext.Fill(cellBackgroundColor, polygon);
+                              case ImageGenerationMode.Walls:
+                                  if (!cell.IsLinkedTo(cell.Inward))
+                                  {
+                                      innerRadius = cell.Row * cellSize;
+                                      ArcLineSegment curvedWall = new(new(x1, y1), new(x3, y3), new SizeF(innerRadius, innerRadius), 0, false, true);
+                                      imageContext.DrawLines(linePen, curvedWall.Flatten().ToArray());
+                                  }
 
-                                break;
+                                  if (!cell.IsLinkedTo(cell.Clockwise))
+                                  {
+                                      imageContext.DrawLines(linePen, new PointF[] { new(x3, y3), new(x4, y4) });
+                                  }
 
-                            case ImageGenerationMode.Walls:
-                                if (!cell.IsLinkedTo(cell.Inward))
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x3, y3) });
-                                }
+                                  break;
 
-                                if (!cell.IsLinkedTo(cell.Clockwise))
-                                {
-                                    imageContext.DrawLines(linePen, new PointF[] { new(x3, y3), new(x4, y4) });
-                                }
+                              case ImageGenerationMode.Text:
+                                  PointF point = new(((x1 + x4) / 2f) - (font.Size / 2f), ((y1 + y4) / 2f) - (font.Size / 2f));
+                                  imageContext.DrawText(this.GetCellContents(cell), font, Color.Black, point);
+                                  break;
+                          }
 
-                                break;
-
-                            case ImageGenerationMode.Text:
-                                PointF point = new(((x1 + x4) / 2f) - (font.Size / 2f), ((y1 + y4) / 2f) - (font.Size / 2f));
-                                imageContext.DrawText(this.GetCellContents(cell), font, Color.Black, point);
-                                break;
-                        }
-
-                        return IteratorResult.Continue;
-                    });
+                          return IteratorResult.Continue;
+                      });
                 }
 
-                PointF origin = new(center, center);
-                int radius = center;
-                EllipsePolygon circle = new(origin, radius);
-                imageContext.DrawPolygon(linePen, circle.Points.ToArray());
+                EllipsePolygon outerWallCircle = new(origin, center);
+                imageContext.DrawPolygon(linePen, outerWallCircle.Points.ToArray());
             });
 
             return image;
@@ -315,25 +298,25 @@ namespace Library.Grids
 
                 if (row <= 0)
                 {
-                    // Ignore the cell at the origin, it only has outward neighbors.
-                    return IteratorResult.Continue;
+              // Ignore the cell at the origin, it only has outward neighbors.
+              return IteratorResult.Continue;
                 }
 
                 cell.Clockwise = this[row, column + 1];
                 cell.CounterClockwise = this[row, column - 1];
 
-                // Ratio of number of cells in current row to previous row.
-                int ratio = this.rows[row].Count / this.rows[row - 1].Count;
+          // Ratio of number of cells in current row to previous row.
+          int ratio = this.rows[row].Count / this.rows[row - 1].Count;
 
-                // Determine which cell in the previous row is the "parent",
-                // which may or not have been subdivided to produce the current cell.
-                PolarCell parent = this.rows[row - 1][column / ratio];
+          // Determine which cell in the previous row is the "parent",
+          // which may or not have been subdivided to produce the current cell.
+          PolarCell parent = this.rows[row - 1][column / ratio];
 
-                // Add the current cell as one of the outward neighbors of the parent.
-                parent.Outward.Add(cell);
+          // Add the current cell as one of the outward neighbors of the parent.
+          parent.Outward.Add(cell);
 
-                // Set the parent as the inward neighbo of the current cell.
-                cell.Inward = parent;
+          // Set the parent as the inward neighbo of the current cell.
+          cell.Inward = parent;
 
                 return IteratorResult.Continue;
             });
