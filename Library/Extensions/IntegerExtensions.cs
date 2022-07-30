@@ -31,5 +31,12 @@ namespace Library.Extensions
         {
             return n % 2 == 0;
         }
+
+        /// <summary>
+        /// Gets whether the integer is is odd.
+        /// </summary>
+        /// <param name="n">The integer.</param>
+        /// <returns><c>true</c> if the integer is odd, <c>false</c> otherwise.</returns>
+        public static bool IsOdd(this int n) => !n.IsEven();
     }
 }

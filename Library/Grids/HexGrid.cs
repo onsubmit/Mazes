@@ -9,11 +9,15 @@ namespace Library.Grids
     using Library.Cells;
     using Library.Extensions;
     using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Drawing;
+    using SixLabors.ImageSharp.Drawing.Processing;
+    using SixLabors.ImageSharp.PixelFormats;
+    using SixLabors.ImageSharp.Processing;
 
     /// <summary>
     /// Represents a maze grid made of hexagonal cells, effectively a collection of <see cref="HexCell"/> objects arranged in x-y coordinates.
     /// </summary>
-    public sealed class HexGrid : Grid<HexCell>
+    public class HexGrid : Grid<HexCell>
     {
         /// <summary>
         /// The collection of <see cref="HexCell"/> objects.
@@ -91,10 +95,108 @@ namespace Library.Grids
             this.cells.ForEachRow(func);
         }
 
+        /// <summary>
+        /// Gets the cell's background color.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's background color.</returns>
+        public virtual Rgba32 GetCellBackgroundColor(HexCell cell) => Rgba32.ParseHex("#ffffff");
+
         /// <inheritdoc/>
         public override Image GetImage(int cellSize = 10)
         {
-            throw new NotImplementedException();
+            double sizeA = cellSize / 2d;
+            double sizeB = cellSize * Math.Sqrt(3d) / 2d;
+            double width = cellSize * 2d;
+            double height = sizeB * 2d;
+
+            int imgWidth = (int)Math.Ceiling((3 * sizeA * this.Columns) + sizeA);
+            int imgHeight = (int)Math.Ceiling((height * this.Rows) + sizeB);
+
+            Image<Rgba32> image = new(imgWidth + 1, imgHeight + 1);
+            image.Mutate(imageContext =>
+            {
+                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
+                imageContext.BackgroundColor(backgroundColor);
+
+                Rgba32 wallColor = Rgba32.ParseHex("#000000");
+                Pen linePen = new(wallColor, 1);
+
+                foreach (ImageGenerationMode mode in new[] { ImageGenerationMode.Backgrounds, ImageGenerationMode.Walls })
+                {
+                    this.ForEachCell(cell =>
+                    {
+                        double centerX = cellSize + (3 * cell.Column * sizeA);
+                        double centerY = sizeB + (cell.Row * height);
+                        if (cell.Column.IsOdd())
+                        {
+                            centerY += sizeB;
+                        }
+
+                        int farWestX = (int)(centerX - cellSize);
+                        int nearWestX = (int)(centerX - sizeA);
+                        int nearEastX = (int)(centerX + sizeA);
+                        int farEastX = (int)(centerX + cellSize);
+
+                        int northY = (int)(centerY - sizeB);
+                        int middleY = (int)centerY;
+                        int southY = (int)(centerY + sizeB);
+
+                        switch (mode)
+                        {
+                            case ImageGenerationMode.Backgrounds:
+                                Rgba32 cellBackgroundColor = this.GetCellBackgroundColor(cell);
+
+                                Polygon polygon = new(
+                                    new LinearLineSegment(
+                                        new Point(farWestX, middleY),
+                                        new Point(nearWestX, northY),
+                                        new Point(nearEastX, northY),
+                                        new Point(farEastX, middleY),
+                                        new Point(nearEastX, southY),
+                                        new Point(nearWestX, southY)));
+
+                                imageContext.Fill(cellBackgroundColor, polygon);
+                                break;
+
+                            case ImageGenerationMode.Walls:
+                                if (cell.OrdinalCells.SouthWest == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(farWestX, middleY), new(nearWestX, southY) });
+                                }
+
+                                if (cell.OrdinalCells.NorthWest == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(farWestX, middleY), new(nearWestX, northY) });
+                                }
+
+                                if (cell.CardinalCells.North == null)
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(nearWestX, northY), new(nearEastX, northY) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.OrdinalCells.NorthEast))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(nearEastX, northY), new(farEastX, middleY) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.OrdinalCells.SouthEast))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(farEastX, middleY), new(nearEastX, southY) });
+                                }
+
+                                if (!cell.IsLinkedTo(cell.CardinalCells.South))
+                                {
+                                    imageContext.DrawLines(linePen, new PointF[] { new(nearEastX, southY), new(nearWestX, southY) });
+                                }
+
+                                break;
+                        }
+                    });
+                }
+            });
+
+            return image;
         }
 
         /// <inheritdoc />
