@@ -6,6 +6,7 @@
 namespace Library.Grids
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Library.Cells;
     using Library.Extensions;
     using SixLabors.ImageSharp;
@@ -95,6 +96,16 @@ namespace Library.Grids
             this.cells.ForEachRow(func);
         }
 
+        /// <inheritdoc />
+        public override HexCell GetRandomCell() => this.cells.GetRandomElement();
+
+        /// <summary>
+        /// Gets the cell's contents.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <returns>The cell's contents.</returns>
+        public virtual string GetCellContents(HexCell cell) => " ";
+
         /// <summary>
         /// Gets the cell's background color.
         /// </summary>
@@ -116,7 +127,7 @@ namespace Library.Grids
             Image<Rgba32> image = new(imgWidth + 1, imgHeight + 1);
             image.Mutate(imageContext =>
             {
-                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
+                Rgba32 backgroundColor = Rgba32.ParseHex("#000000");
                 imageContext.BackgroundColor(backgroundColor);
 
                 Rgba32 wallColor = Rgba32.ParseHex("#000000");
@@ -156,7 +167,9 @@ namespace Library.Grids
                                         new Point(nearEastX, southY),
                                         new Point(nearWestX, southY)));
 
+                                polygon.LineSegments.ToList().ForEach(line => imageContext.DrawLines(cellBackgroundColor, 2 * linePen.StrokeWidth, line.Flatten().ToArray()));
                                 imageContext.Fill(cellBackgroundColor, polygon);
+
                                 break;
 
                             case ImageGenerationMode.Walls:
@@ -198,9 +211,6 @@ namespace Library.Grids
 
             return image;
         }
-
-        /// <inheritdoc />
-        public override HexCell GetRandomCell() => this.cells.GetRandomElement();
 
         /// <inheritdoc/>
         protected override void ConfigureCells()

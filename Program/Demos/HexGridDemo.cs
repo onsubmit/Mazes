@@ -19,8 +19,10 @@ namespace Program.Demos
         /// </summary>
         public static void Execute()
         {
-            HexGrid grid = new(20);
+            HexColoredGrid grid = new(30);
             new RecursiveBacktracker<HexGrid, HexCell>().Execute(grid);
+
+            grid.Distances = grid.GetDistancesFromCell(grid.GetRandomCell());
             grid.SaveImage("HexGrid.png", 20);
         }
     }

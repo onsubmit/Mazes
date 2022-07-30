@@ -75,3 +75,9 @@
 ### Polar grid with Recursive Backtracker
 
 ![PolarGrid](images/PolarGrid.png?raw=true "PolarGrid")
+
+## Chapter 8
+
+### Hexagonal grid with Recursive Backtracker
+
+![HexGrid](images/HexGrid.png?raw=true "HexGrid")
