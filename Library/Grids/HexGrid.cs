@@ -127,7 +127,7 @@ namespace Library.Grids
             Image<Rgba32> image = new(imgWidth + 1, imgHeight + 1);
             image.Mutate(imageContext =>
             {
-                Rgba32 backgroundColor = Rgba32.ParseHex("#000000");
+                Rgba32 backgroundColor = Rgba32.ParseHex("#ffffff");
                 imageContext.BackgroundColor(backgroundColor);
 
                 Rgba32 wallColor = Rgba32.ParseHex("#000000");
