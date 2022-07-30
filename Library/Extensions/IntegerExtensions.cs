@@ -21,5 +21,15 @@ namespace Library.Extensions
             // https://stackoverflow.com/a/1082938
             return ((a % b) + b) % b;
         }
+
+        /// <summary>
+        /// Gets whether the integer is is even.
+        /// </summary>
+        /// <param name="n">The integer.</param>
+        /// <returns><c>true</c> if the integer is even, <c>false</c> otherwise.</returns>
+        public static bool IsEven(this int n)
+        {
+            return n % 2 == 0;
+        }
     }
 }

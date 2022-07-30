@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="CartesianCell.cs" company="Andy Young">
+// <copyright file="HexCell.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,16 +8,16 @@ namespace Library.Cells
     using Library.Extensions;
 
     /// <summary>
-    /// Represents a maze cell in a Cartesian grid.
+    /// Represents a hexagonal cell.
     /// </summary>
-    public class CartesianCell : Cell
+    public class HexCell : Cell
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianCell"/> class.
+        /// Initializes a new instance of the <see cref="HexCell"/> class.
         /// </summary>
         /// <param name="row">The row at which the cell exists in the maze.</param>
         /// <param name="column">The column at which the cell exists in the maze.</param>
-        public CartesianCell(int row, int column)
+        public HexCell(int row, int column)
         {
             this.Row = row;
             this.Column = column;
@@ -36,31 +36,28 @@ namespace Library.Cells
         /// <summary>
         /// Gets the potential neighboring cells in the cardinal directions.
         /// </summary>
-        public CardinalCells<CartesianCell> CardinalCells { get; } = new();
+        public CardinalCells<HexCell> CardinalCells { get; } = new();
+
+        /// <summary>
+        /// Gets the potential neighboring cells in the ordinal directions.
+        /// </summary>
+        public OrdinalCells<HexCell> OrdinalCells { get; } = new();
 
         /// <inheritdoc/>
-        public override CartesianCell[] Neighbors
+        public override HexCell[] Neighbors
         {
             get
             {
-                List<CartesianCell> neighbors = new();
-
+                List<HexCell> neighbors = new();
+                neighbors.AddIfNotNull(this.OrdinalCells.NorthWest);
                 neighbors.AddIfNotNull(this.CardinalCells.North);
+                neighbors.AddIfNotNull(this.OrdinalCells.NorthEast);
+                neighbors.AddIfNotNull(this.OrdinalCells.SouthWest);
                 neighbors.AddIfNotNull(this.CardinalCells.South);
-                neighbors.AddIfNotNull(this.CardinalCells.East);
-                neighbors.AddIfNotNull(this.CardinalCells.West);
+                neighbors.AddIfNotNull(this.OrdinalCells.SouthEast);
 
                 return neighbors.ToArray();
             }
-        }
-
-        /// <summary>
-        /// Generates a string repsentation of the cell.
-        /// </summary>
-        /// <returns>A string repsentation of the cell.</returns>
-        public override string ToString()
-        {
-            return $"({this.Row}, {this.Column})";
         }
     }
 }

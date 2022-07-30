@@ -22,11 +22,11 @@ namespace Library.Algorithms.Generation
         {
             grid.ForEachCell(cell =>
             {
-                List<Cell> neighbors = new();
-                neighbors.AddIfNotNull(cell.North);
-                neighbors.AddIfNotNull(cell.East);
+                List<CartesianCell> neighbors = new();
+                neighbors.AddIfNotNull(cell.CardinalCells.North);
+                neighbors.AddIfNotNull(cell.CardinalCells.East);
 
-                if (neighbors.TryGetRandomElement(out Cell neighbor))
+                if (neighbors.TryGetRandomElement(out CartesianCell neighbor))
                 {
                     cell.Link(neighbor);
                 }

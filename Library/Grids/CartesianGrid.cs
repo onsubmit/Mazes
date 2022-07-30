@@ -159,22 +159,22 @@ namespace Library.Grids
                                 break;
 
                             case ImageGenerationMode.Walls:
-                                if (cell.North == null)
+                                if (cell.CardinalCells.North == null)
                                 {
                                     imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x2, y1) });
                                 }
 
-                                if (cell.West == null)
+                                if (cell.CardinalCells.West == null)
                                 {
                                     imageContext.DrawLines(linePen, new PointF[] { new(x1, y1), new(x1, y2) });
                                 }
 
-                                if (!cell.IsLinkedTo(cell.East))
+                                if (!cell.IsLinkedTo(cell.CardinalCells.East))
                                 {
                                     imageContext.DrawLines(linePen, new PointF[] { new(x2, y1), new(x2, y2) });
                                 }
 
-                                if (!cell.IsLinkedTo(cell.South))
+                                if (!cell.IsLinkedTo(cell.CardinalCells.South))
                                 {
                                     imageContext.DrawLines(linePen, new PointF[] { new(x1, y2), new(x2, y2) });
                                 }
@@ -233,8 +233,8 @@ namespace Library.Grids
                 foreach (CartesianCell c in row)
                 {
                     CartesianCell cell = c ?? new CartesianCell(-1, -1);
-                    char eastBoundary = cell.IsLinkedTo(cell.East) ? VerticalOpening : VerticalWall;
-                    string southBoundary = cell.IsLinkedTo(cell.South) ? HorizontalOpening : HorizontalWall;
+                    char eastBoundary = cell.IsLinkedTo(cell.CardinalCells.East) ? VerticalOpening : VerticalWall;
+                    string southBoundary = cell.IsLinkedTo(cell.CardinalCells.South) ? HorizontalOpening : HorizontalWall;
 
                     topBuilder.Append($" {this.GetCellContents(cell)} ");
                     topBuilder.Append(eastBoundary);
@@ -271,10 +271,10 @@ namespace Library.Grids
                         continue;
                     }
 
-                    cell.North = this[r - 1, c];
-                    cell.South = this[r + 1, c];
-                    cell.West = this[r, c - 1];
-                    cell.East = this[r, c + 1];
+                    cell.CardinalCells.North = this[r - 1, c];
+                    cell.CardinalCells.South = this[r + 1, c];
+                    cell.CardinalCells.West = this[r, c - 1];
+                    cell.CardinalCells.East = this[r, c + 1];
                 }
             }
         }

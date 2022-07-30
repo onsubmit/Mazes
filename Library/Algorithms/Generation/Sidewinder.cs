@@ -27,21 +27,21 @@ namespace Library.Algorithms.Generation
                 {
                     run.Add(cell);
 
-                    if (cell.East == null || (cell.North != null && Rand.Instance.Next(2) == 0))
+                    if (cell.CardinalCells.East == null || (cell.CardinalCells.North != null && Rand.Instance.Next(2) == 0))
                     {
                         // Close out the current run if we're at the eastern boundary
                         // or randomly as long as we are not in the northernmost row.
                         CartesianCell member = run.GetRandomElement();
-                        if (member.North != null)
+                        if (member.CardinalCells.North != null)
                         {
-                            member.Link(member.North);
+                            member.Link(member.CardinalCells.North);
                         }
 
                         run.Clear();
                     }
                     else
                     {
-                        cell.Link(cell.East);
+                        cell.Link(cell.CardinalCells.East);
                     }
                 }
             });
